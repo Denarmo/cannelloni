@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg?style=for-the-badge&labelColor=E8C896&color=555555" height="28" alt="License: GPLv3"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL%20v3%20%7C%20MIT-blue.svg?style=for-the-badge&labelColor=E8C896&color=555555" height="28" alt="License: GPLv3 | MIT"></a>
   <a href="https://github.com/Denarmo/cannelloni/releases"><img src="https://img.shields.io/badge/Release-v1.0.0-orange.svg?style=for-the-badge&labelColor=E8C896&color=555555" height="28" alt="Latest Release"></a>
   <a href="LEGAL.md"><img src="https://img.shields.io/badge/Legal-Notices-green.svg?style=for-the-badge&labelColor=E8C896&color=555555" height="28" alt="Legal Notices"></a>
   <a href="#supported-platforms--devices"><img src="https://img.shields.io/badge/Platform-Android%209%2B-brightgreen.svg?style=for-the-badge&labelColor=E8C896&color=555555" height="28" alt="Android 9+"></a>
@@ -173,12 +173,17 @@ For an itemized list of licenses and attributions, see [credits.json](credits.js
 
 ## 📄 License & Attribution
 
-Cannelloni is free and open-source software:
+Cannelloni is open-source software with clear dual-attribution and permissive terms for downstream use:
 
 - **Original Cannoli Codebase:** Copyright (C) 2026 Brandon T. Kowalski and Cannoli Contributors. Licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).
-- **Cannelloni Modifications & Additions:** Copyright (C) 2026 Denarmo and Cannelloni Contributors. Licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).
+- **Cannelloni Modifications & New Code:** Copyright (C) 2026 Denarmo and Cannelloni Contributors. Licensed under the [MIT License](LICENSE).
 
 > [!NOTE]
-> The author/maintainer of this repository is not the original owner of the underlying Cannoli codebase. All original code belongs to the original authors. All new code, modifications, and enhancements created for this fork are freely available under the GPL-3.0 license for others to use, modify, adapt, and redistribute.
+> **Declaration of Non-Ownership & Open Permissions:**
+> The maintainer of this repository (Denarmo) claims **no ownership** of the original fork's codebase. All original code belongs to the original authors.
+> 
+> All new code, modifications, and enhancements authored by Denarmo are released under the permissive **MIT License** and may be freely used, copied, modified, incorporated, and redistributed by anyone—including the upstream Cannoli project and third-party developers.
+> 
+> Because the complete, compiled Android application links and combines with upstream GPL-3.0 code, the distributed binary APK is conveyed under the [GNU General Public License v3.0](LICENSE).
 
 See [**LICENSE**](LICENSE) for full legal text and [**LEGAL.md**](LEGAL.md) for full compliance information.

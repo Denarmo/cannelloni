@@ -1,26 +1,69 @@
 ==============================================================================
-Cannelloni — Fork Attribution, Ownership Notice & Licensing Terms
+Cannelloni — Fork Attribution, Ownership Notice & Dual-Licensing Terms
 ==============================================================================
 
 This project is an open-source downstream fork of Cannoli (https://github.com/CannoliHQ/cannoli).
 
 Copyright (C) 2026 Brandon T. Kowalski and Cannoli Contributors (Original Codebase)
-Copyright (C) 2026 Denarmo and Cannelloni Contributors (Modifications & Additions)
+Copyright (C) 2026 Denarmo and Cannelloni Contributors (Modifications, Additions & New Features)
 
-DECLARATION OF NON-OWNERSHIP:
-The maintainer/author of this fork (Denarmo) is NOT the original owner or author
-of the underlying Cannoli codebase. The original authors retain full copyright
-and credit over their respective original contributions.
+------------------------------------------------------------------------------
+1. DECLARATION OF NON-OWNERSHIP
+------------------------------------------------------------------------------
+The maintainer/author of this repository (Denarmo) claims NO ownership or original
+authorship of the underlying Cannoli codebase or its constituent parts. All
+original code, assets, design concepts, and documentation remain the intellectual
+property and copyright of Brandon T. Kowalski and the Cannoli Contributors under
+the GNU General Public License version 3.0 (GPL-3.0).
 
-GRANT OF RIGHTS & USAGE PERMISSION:
-All modifications, bug fixes, enhancements, and new code written for Cannelloni
-are free and open-source software. You are welcome and explicitly permitted to
-use, study, modify, copy, adapt, incorporate, and redistribute any code from
-this project, subject to the terms and conditions of the GNU General Public
-License as published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+------------------------------------------------------------------------------
+2. MIT LICENSE FOR FORK MODIFICATIONS & NEW CODE
+------------------------------------------------------------------------------
+All modifications, additions, enhancements, bug fixes, and new code authored
+by Denarmo and Cannelloni Contributors for the Cannelloni project are licensed
+under the permissive terms of the MIT License:
+
+    The MIT License (MIT)
+
+    Copyright (c) 2026 Denarmo and Cannelloni Contributors
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+------------------------------------------------------------------------------
+3. USAGE PERMISSION FOR OTHERS
+------------------------------------------------------------------------------
+Any and all code authored by Denarmo in this repository may be freely used,
+copied, adapted, incorporated, merged, and redistributed by anyone—including the
+upstream Cannoli team, other open-source projects, and individual developers—
+under the terms of the MIT License stated above.
+
+------------------------------------------------------------------------------
+4. COMBINED WORK DISTRIBUTION (GPL-3.0)
+------------------------------------------------------------------------------
+Because Cannelloni as a complete Android application incorporates and links with
+the original Cannoli codebase licensed under the GNU General Public License v3.0,
+the compiled APK binaries and repository as a combined work are conveyed in
+compliance with the GNU General Public License version 3.0 (GPL-3.0). The full
+text of the GNU General Public License follows below.
 
 ==============================================================================
+
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

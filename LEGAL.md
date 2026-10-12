@@ -62,14 +62,14 @@ Notices can be submitted via GitHub Issues or directly to the project maintainer
 
 ---
 
-## 5. Disclaimer of Warranty and Limitation of Liability (GPL-3.0)
+## 5. Disclaimer of Warranty and Limitation of Liability (GPL-3.0 & MIT)
 
-Cannelloni is licensed under the **GNU General Public License version 3.0 (GPL-3.0)**. The following disclaimers apply to the fullest extent permitted by applicable law:
+Cannelloni is distributed as open-source software under the terms of the **GNU General Public License version 3.0 (GPL-3.0)** for the combined work, with fork-specific contributions provided under the **MIT License**. The following disclaimers apply to the fullest extent permitted by applicable law:
 
-### Disclaimer of Warranty (GPLv3 § 15)
+### Disclaimer of Warranty (GPLv3 § 15 & MIT)
 > **THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.**
 
-### Limitation of Liability (GPLv3 § 16)
+### Limitation of Liability (GPLv3 § 16 & MIT)
 > **IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.**
 
 ---
@@ -79,6 +79,7 @@ Cannelloni is licensed under the **GNU General Public License version 3.0 (GPL-3
 Cannelloni incorporates and interfaces with various third-party open-source components, libraries, shaders, and fonts. Each component is governed by its respective open-source license:
 
 - **Cannoli**: Foundation codebase, GNU General Public License v3.0 (CannoliHQ).
+- **Cannelloni Modifications & New Code**: Modifications and additions authored by Denarmo and contributors, MIT License.
 - **MinUI**: Original minimalist handheld design inspiration by Shaun Inman.
 - **Libretro / RetroArch**: Libretro API, core specifications, and emulation runtime (GPL / various permissive licenses).
 - **Cores**: Individual emulation cores maintain their respective licenses (GPLv2, GPLv3, MPLv2.0, Zlib, Non-commercial, MAME license). See [`credits.json`](credits.json) and in-app Credits for granular breakdowns.
@@ -90,15 +91,21 @@ For the complete list of licenses and attributions, see [`LICENSE`](LICENSE) and
 
 ---
 
-## 7. Fork Ownership & Open Modification Terms
+## 7. Fork Ownership, MIT Licensing & Modification Terms
 
-### 7.1 Downstream Fork Notice
-Cannelloni is a downstream fork of the **Cannoli** project originally created by **Brandon T. Kowalski** and the Cannoli development team. 
+### 7.1 Downstream Fork Notice & Non-Ownership
+Cannelloni is an open-source downstream fork of the **Cannoli** project originally created by **Brandon T. Kowalski** and the Cannoli development team. 
 
-- **Original Authorship & Ownership:** The maintainer of this repository (Denarmo) is **not** the original author or owner of the underlying Cannoli codebase. The original codebase remains the property and copyright of Brandon T. Kowalski and Cannoli contributors under the GNU General Public License version 3.0 (GPLv3).
-- **Modification Attribution:** All subsequent modifications, rebranding, architectural enhancements, melonDS integration, and new code authored specifically for Cannelloni are Copyright (C) 2026 Denarmo and Cannelloni Contributors under the GPLv3.
+- **No Ownership Claim:** The maintainer of this repository (Denarmo) claims **no ownership** or original authorship over the underlying Cannoli codebase or its assets. The original codebase remains the sole property and copyright of Brandon T. Kowalski and the Cannoli Contributors under the GNU General Public License version 3.0 (GPLv3).
+- **Modification Attribution:** All subsequent modifications, rebranding, architectural enhancements, melonDS Nintendo DS integration, touchscreen input handling, screen-swap shortcuts, and new code authored specifically for Cannelloni are Copyright (C) 2026 Denarmo and Cannelloni Contributors.
 
-### 7.2 Permission for Others to Use and Build Upon This Code
-In accordance with the spirit of open-source collaboration and the provisions of the **GNU General Public License v3.0 (GPL-3.0)**:
-- **Freedom of Use:** Any and all code contributed to Cannelloni by Denarmo is free software.
-- **Derivative Works & Upstream Merges:** Other developers, projects, and the upstream Cannoli team are explicitly invited and welcome to use, adapt, incorporate, copy, and redistribute any code, fixes, or features authored in this repository, provided that such derivative works comply with the terms of the GPLv3.
+### 7.2 Denarmo's Code is MIT Licensed
+All modifications, additions, bug fixes, and new features authored by Denarmo for Cannelloni are released under the permissive terms of the **MIT License**.
+
+### 7.3 Permission for Others to Use and Build Upon This Code
+In accordance with the permissive nature of the MIT License:
+- **Freedom to Use:** All code authored by Denarmo in this project may be freely used, modified, copied, adapted, merged, published, sublicensed, and/or redistributed by anyone.
+- **Upstream & Third-Party Adoption:** The upstream Cannoli team, other open-source frontend/emulator projects, and independent developers are explicitly welcome and encouraged to adopt, cherry-pick, merge, and build upon any code, features, or fixes authored in this repository under the MIT License.
+
+### 7.4 Combined Distribution under GPLv3
+Because the complete, runnable Android application links and combines with the upstream Cannoli codebase (which is licensed under the GPL-3.0), binary releases and the integrated repository as a whole are distributed under the copyleft provisions of the **GNU General Public License v3.0 (GPL-3.0)**.
