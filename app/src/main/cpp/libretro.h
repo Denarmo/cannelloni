@@ -19,7 +19,15 @@ extern "C" {
 // Device types
 #define RETRO_DEVICE_NONE    0
 #define RETRO_DEVICE_JOYPAD  1
+#define RETRO_DEVICE_MOUSE   2
 #define RETRO_DEVICE_ANALOG  5
+#define RETRO_DEVICE_POINTER 6
+
+// Pointer IDs
+#define RETRO_DEVICE_ID_POINTER_X       0
+#define RETRO_DEVICE_ID_POINTER_Y       1
+#define RETRO_DEVICE_ID_POINTER_PRESSED 2
+#define RETRO_DEVICE_ID_POINTER_COUNT   3
 
 // Analog stick indices
 #define RETRO_DEVICE_INDEX_ANALOG_LEFT   0

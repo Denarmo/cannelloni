@@ -22,8 +22,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Cannoli"
+rootProject.name = "Cannelloni"
 include(":app")
-include(":cannoli-ui")
-include(":cannoli-igm")
-include(":cannoli-core")
+include(":cannelloni-ui")
+include(":cannelloni-igm")
+include(":cannelloni-core")
+

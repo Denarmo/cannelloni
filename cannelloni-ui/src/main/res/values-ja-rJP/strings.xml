@@ -1,0 +1,792 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Bottom bar labels -->
+    <string name="label_back">æˆ»ã‚‹</string>
+    <string name="label_cancel" tools:ignore="ButtonCase">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</string>
+    <string name="label_select">é¸æŠž</string>
+    <string name="label_play">ãƒ—ãƒ¬ã‚¤</string>
+    <string name="label_launch">èµ·å‹•</string>
+    <string name="label_open">é–‹ã</string>
+    <string name="label_save">ä¿å­˜</string>
+    <string name="label_load">ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="label_change">å¤‰æ›´</string>
+    <string name="label_firmware">FIRWARE</string>
+    <string name="label_choose">é¸æŠž</string>
+    <string name="label_close">é–‰ã˜ã‚‹</string>
+    <string name="label_help">ãƒ˜ãƒ«ãƒ—</string>
+    <string name="label_remove">ã‚·ãƒ§ãƒƒãƒˆã‚«ãƒƒãƒˆã‚’å‰Šé™¤</string>
+    <string name="label_change_emulator">ã‚¨ãƒŸãƒ¬ãƒ¼ã‚¿ãƒ¼ã®å¤‰æ›´</string>
+    <string name="label_delete">å‰Šé™¤</string>
+    <string name="label_confirm">ç¢ºèªã™ã‚‹</string>
+    <string name="label_toggle">åˆ‡ã‚Šæ›¿ãˆ</string>
+    <string name="label_new">æ–°è¦</string>
+    <string name="label_settings">è¨­å®š</string>
+    <string name="label_resume">å†é–‹</string>
+    <string name="label_continue">ç¶šã‘ã‚‹</string>
+    <string name="label_new_folder">æ–°è¦</string>
+    <string name="label_parent">ãŸã¨ãˆã°ã€</string>
+    <string name="label_slot">SLOT</string>
+    <string name="label_disc">DISC</string>
+    <string name="label_use_location">ã“ã®å ´æ‰€ã‚’ä½¿ç”¨</string>
+    <string name="label_quit">çµ‚äº†</string>
+    <string name="label_stop">åœæ­¢</string>
+    <string name="label_interface">ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹</string>
+    <string name="label_credits">ã‚¯ãƒ¬ã‚¸ãƒƒãƒˆ</string>
+    <string name="label_update">æ›´æ–°</string>
+    <string name="label_logout">LOGOUT</string>
+    <!-- Bottom-bar button opening cached RetroAchievements sets for offline play. RA = RetroAchievements. -->
+    <string name="label_offline_sets">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã‚»ãƒƒãƒˆ</string>
+    <string name="label_hex">HEX</string>
+    <string name="label_rename">åå‰ã®å¤‰æ›´</string>
+    <string name="label_set">è¨­å®š</string>
+    <string name="label_clear">æ¶ˆåŽ»</string>
+    <string name="label_press">ãƒ—ãƒ¬ã‚¹</string>
+    <!-- Bottom-bar button; opens Nonna's Kitchen. -->
+    <string name="label_kitchen">ã‚·ãƒãƒªã‚¢</string>
+    <string name="label_hold_buttons" tools:ignore="TypographyEllipsis">1ã¤ã¾ãŸã¯è¤‡æ•°ã®ãƒœã‚¿ãƒ³ã‚’é•·æŠ¼ã—ã—ã¦ãã ã•ã„...</string>
+    <string name="label_info">æƒ…å ±</string>
+    <!-- Bottom-bar button. RA = RetroAchievements. -->
+    <string name="label_ra_settings">RAã®è¨­å®š</string>
+    <string name="label_details">è©³ç´°</string>
+    <string name="label_all">ã™ã¹ã¦</string>
+    <string name="label_unlocked">ã‚¢ãƒ³ãƒ­ãƒƒã‚¯ã—ã¾ã—ãŸ</string>
+    <string name="label_locked">ãƒ­ãƒƒã‚¯æ¸ˆã¿</string>
+    <string name="label_reset_all">ã™ã¹ã¦ãƒªã‚»ãƒƒãƒˆ</string>
+    <string name="label_remap">REMAP</string>
+    <string name="label_unmap">UNMAP</string>
+    <string name="label_swap">SWAP</string>
+    <string name="label_grant">Grant</string>
+    <!-- In-game menu action: reassign connected controllers to player slots. -->
+    <string name="igm_reassign_players">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å†å‰²ã‚Šå½“ã¦</string>
+    <!-- In-game shortcut actions -->
+    <string name="shortcut_action_save_state">çŠ¶æ…‹ã‚’ä¿å­˜</string>
+    <string name="shortcut_action_load_state">çŠ¶æ…‹ã‚’èª­ã¿è¾¼ã‚€</string>
+    <string name="shortcut_action_reset_game">ã‚²ãƒ¼ãƒ ã‚’ãƒªã‚»ãƒƒãƒˆ</string>
+    <string name="shortcut_action_save_and_quit">ä¿å­˜ã—ã¦çµ‚äº†</string>
+    <!-- In-game shortcut action. "(Hold)" means it triggers on a long-press of the shortcut. -->
+    <string name="shortcut_action_save_and_quit_hold">ä¿å­˜ã—ã¦çµ‚äº† (Hold)</string>
+    <!-- In-game shortcut action: cycle through the video scaling modes. -->
+    <string name="shortcut_action_cycle_scaling">ã‚µã‚¤ã‚¯ãƒ«ã‚¹ã‚±ãƒ¼ãƒ«</string>
+    <!-- In-game shortcut action: cycle through the shader presets. -->
+    <string name="shortcut_action_cycle_shader">ã‚µã‚¤ã‚¯ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼</string>
+    <string name="shortcut_action_toggle_ff">æ—©é€ã‚Šåˆ‡ã‚Šæ›¿ãˆ</string>
+    <string name="shortcut_action_hold_ff">æ€¥ã„ã§å‰ã«é€²ã‚€</string>
+    <string name="shortcut_action_open_guide">ã‚¬ã‚¤ãƒ‰ã‚’é–‹ã</string>
+    <string name="shortcut_action_open_menu">ã‚²ãƒ¼ãƒ å†…ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’é–‹ã</string>
+    <string name="shortcut_action_toggle_show_fps">FPSè¡¨ç¤ºã®åˆ‡ã‚Šæ›¿ãˆ</string>
+    <string name="settings_title">è¨­å®š</string>
+    <!-- Settings categories -->
+    <string name="settings_general">å…¨èˆ¬</string>
+    <string name="settings_display">å¤–è¦³</string>
+    <string name="settings_library">ãƒ©ã‚¤ãƒ–ãƒ©ãƒª</string>
+    <string name="settings_status_bar">ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼</string>
+    <string name="settings_input">Input</string>
+    <string name="settings_emulation">ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³</string>
+    <string name="settings_integrations">çµ±åˆ</string>
+    <string name="settings_advanced">é«˜åº¦ãªè¨­å®š</string>
+    <string name="settings_debug">Debug</string>
+    <string name="settings_about">About</string>
+    <!-- Setting: which update channel to follow (e.g. stable versus test builds). -->
+    <string name="settings_release_channel">ãƒãƒ£ãƒ³ãƒãƒ«ã‚’ãƒªãƒªãƒ¼ã‚¹</string>
+    <!-- Settings items -->
+    <string name="setting_colors">è‰²</string>
+    <string name="setting_art_width">ã‚¢ãƒ¼ãƒˆã®å¹…</string>
+    <string name="setting_art_scale">ã‚¢ãƒ¼ãƒˆã‚¹ã‚±ãƒ¼ãƒ«</string>
+    <string name="setting_text_size">æ–‡å­—ã‚µã‚¤ã‚º</string>
+    <string name="setting_font">Font</string>
+    <!-- Settings row label: opens the app language picker. -->
+    <string name="setting_language">è¨€èªž</string>
+    <!-- Appearance setting: shows or hides the title-bar heading text. "Title" here is the heading, not color or box art. -->
+    <string name="setting_title">ã‚¿ã‚¤ãƒˆãƒ«</string>
+    <string name="setting_bg_image">èƒŒæ™¯ç”»åƒ</string>
+    <string name="setting_vpn">VPN</string>
+    <string name="setting_clock">æ™‚è¨ˆ</string>
+    <string name="setting_battery">ãƒãƒƒãƒ†ãƒªãƒ¼</string>
+    <!-- Status-bar indicator toggle: show when Nonna's Kitchen (file server) is running. -->
+    <string name="setting_kitchen_running">ã‚­ãƒƒãƒãƒ³ã®å®Ÿè¡Œ</string>
+    <!-- Status-bar indicator toggle for active RomM downloads. -->
+    <string name="setting_downloads_running">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <!-- Status-bar indicator toggle: show when an app update is available. -->
+    <string name="setting_updater">ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆãŒã‚ã‚Šã¾ã™</string>
+    <string name="setting_controllers">ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©</string>
+    <string name="controllers_connected_now">ä»ŠæŽ¥ç¶šã—ã¾ã—ãŸ</string>
+    <string name="controllers_saved_mappings">ä¿å­˜ã•ã‚ŒãŸãƒžãƒƒãƒ”ãƒ³ã‚°</string>
+    <string name="controllers_empty_connected">é–‹å§‹ã™ã‚‹ã«ã¯ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’æŽ¥ç¶šã—ã¦ãã ã•ã„ã€‚</string>
+    <string name="controllers_mapping_not_found">ãƒžãƒƒãƒ”ãƒ³ã‚°ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚</string>
+    <string name="controllers_edit_buttons">ãƒœã‚¿ãƒ³ã‚’ç·¨é›†</string>
+    <string name="controllers_name">åå‰</string>
+    <!-- Controller setting: which face button acts as confirm/OK. -->
+    <string name="controllers_confirm_button">ç¢ºèªãƒœã‚¿ãƒ³</string>
+    <!-- Controller setting: which face-button glyph set to display (letters like A/B versus shapes). -->
+    <string name="controllers_glyph_style">ã‚°ãƒªãƒ•ã‚¹ã‚¿ã‚¤ãƒ«</string>
+    <!-- Controller toggle: ignore this controller during gameplay (e.g. a media remote). -->
+    <string name="controllers_exclude_from_gameplay">ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤ã‹ã‚‰é™¤å¤–</string>
+    <string name="controllers_reset_defaults">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚’ãƒªã‚»ãƒƒãƒˆ</string>
+    <!-- Shown when a button has no assigned binding. -->
+    <string name="controllers_not_bound">æ‹˜æŸã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <!-- Confirm button values -->
+    <!-- Canonical button labels -->
+    <string name="canonical_dpad_up">æ–¹å‘ãƒ‘ãƒƒãƒ‰ä¸Š</string>
+    <string name="canonical_dpad_down">æ–¹å‘ãƒ‘ãƒƒãƒ‰ä¸‹</string>
+    <string name="canonical_dpad_left">æ–¹å‘ãƒ‘ãƒƒãƒ‰å·¦</string>
+    <string name="canonical_dpad_right">æ–¹å‘ãƒ‘ãƒƒãƒ‰å³</string>
+    <string name="canonical_start">é–‹å§‹</string>
+    <string name="canonical_select">é¸æŠž</string>
+    <string name="canonical_menu">ãƒ¡ãƒ‹ãƒ¥ãƒ¼</string>
+    <!-- Face-button position, not a compass direction: the bottom face button (South/East/West/North layout). -->
+    <string name="canonical_south">South</string>
+    <!-- Face-button position (not compass): the right face button. -->
+    <string name="canonical_east">East</string>
+    <!-- Face-button position (not compass): the left face button. -->
+    <string name="canonical_west">è¥¿ã¸</string>
+    <!-- Face-button position (not compass): the top face button. -->
+    <string name="canonical_north">North</string>
+    <!-- Glyph face button labels -->
+    <!-- Hat directions -->
+    <string name="hat_up">ä¸Šã¸</string>
+    <string name="hat_down">ä¸‹</string>
+    <string name="hat_left">å·¦</string>
+    <string name="hat_right">å³</string>
+    <!-- Binding formatters -->
+    <!-- Input binding label. %1$d is the numeric key code. -->
+    <string name="binding_key">ã‚­ãƒ¼ %1$d</string>
+    <!-- Input binding label. %1$s is the hat (D-pad) direction. -->
+    <string name="binding_hat">å¸½å­ %1$s</string>
+    <!-- Input binding label. %1$d is the joystick axis index; + is the positive direction. -->
+    <string name="binding_axis_pos">Axis %1$d+</string>
+    <!-- Input binding label. %1$d is the joystick axis index; - is the negative direction. -->
+    <string name="binding_axis_neg">Axis %1$d-</string>
+    <string name="setting_shortcuts">ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ</string>
+    <!-- Input setting toggle: swap the on-screen positions of the Play and Resume actions. -->
+    <string name="setting_swap_play_resume">å†ç”Ÿã¨å†é–‹ã‚’å…¥ã‚Œæ›¿ãˆ</string>
+    <!-- Input setting toggle: controls whether the in-game Quit returns to the main menu. -->
+    <string name="setting_main_menu_quit">ãƒ¡ã‚¤ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’çµ‚äº†</string>
+    <!-- Input toggle: automatically save a state when quitting a game. -->
+    <string name="setting_always_save_on_quit">çµ‚äº†æ™‚ã«çŠ¶æ…‹ã‚’ä¿å­˜</string>
+    <!-- Advanced setting toggle: skip the passcode gate for Nonna's Kitchen. Keep "Kitchen" consistent with the feature name. -->
+    <string name="setting_kitchen_code_bypass">ã‚­ãƒƒãƒãƒ³ã‚³ãƒ¼ãƒ‰ãƒã‚¤ãƒ‘ã‚¹</string>
+    <string name="setting_experimental_features">å®Ÿé¨“çš„ãªæ©Ÿèƒ½</string>
+    <string name="setting_set_default_launcher">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ©ãƒ³ãƒãƒ£ãƒ¼ã¨ã—ã¦è¨­å®š</string>
+    <!-- Same row as setting_set_default_launcher, shown when Cannelloni is already the default launcher and the user wants to pick another one. -->
+    <!-- Advanced action: recreate the standard platform/system folders. -->
+    <string name="setting_regenerate_system_folders">ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚©ãƒ«ãƒ€ã‚’å†ç”Ÿæˆ</string>
+    <!-- Library setting: which content layout to show (platforms, collections only, or Five Game Handheld). -->
+    <string name="setting_content_mode">ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ãƒ¢ãƒ¼ãƒ‰</string>
+    <!-- Library setting for the Five Game Handheld collection. Keep "5GH" as-is. -->
+    <string name="setting_fgh_collection">5GHã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="setting_show_recently_played">æœ€è¿‘ãƒ—ãƒ¬ã‚¤ã—ãŸæ›²</string>
+    <!-- Library setting: show or hide the Favorites entry on the main list. -->
+    <string name="setting_show_favorites">ãŠæ°—ã«å…¥ã‚Š</string>
+    <!-- Opens the Tools manager (sideloaded utility apps). -->
+    <string name="setting_manage_tools">ãƒ„ãƒ¼ãƒ«ã‚’ç®¡ç†</string>
+    <!-- Opens the Ports manager. "Ports" means standalone native game ports. -->
+    <string name="setting_manage_ports">ãƒãƒ¼ãƒˆã®ç®¡ç†</string>
+    <string name="setting_bg_tint">èƒŒæ™¯ã®è‰²</string>
+    <!-- Theme color for the title heading text. -->
+    <string name="setting_color_title">ã‚¿ã‚¤ãƒˆãƒ«</string>
+    <string name="setting_color_highlight">å¼·èª¿è¡¨ç¤º</string>
+    <string name="setting_color_text">ãƒ†ã‚­ã‚¹ãƒˆ</string>
+    <!-- Theme color: text drawn on the highlighted/selected row. -->
+    <string name="setting_color_highlight_text">ãƒ†ã‚­ã‚¹ãƒˆã‚’å¼·èª¿è¡¨ç¤º</string>
+    <string name="setting_color_accent">ã‚¢ã‚¯ã‚»ãƒ³ãƒˆï¼š</string>
+    <string name="setting_color_background">èƒŒæ™¯</string>
+    <string name="setting_color_status_bar">ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒãƒ¼</string>
+    <!-- Settings row. %s is the emulator app name (e.g. RetroArch). -->
+    <string name="setting_installed_cores">%s ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚ŒãŸã‚³ã‚¢</string>
+    <!-- Screen title. %s is the emulator app name (e.g. RetroArch). -->
+    <string name="title_installed_cores">%s ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚ŒãŸã‚³ã‚¢</string>
+    <string name="installed_cores_none">ã‚³ã‚¢ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“</string>
+    <!-- Setting: the app's root storage folder on the SD card. -->
+    <string name="setting_sd_root">Cannelloniãƒ«ãƒ¼ãƒˆ</string>
+    <string name="setting_rom_directory">ROM ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª</string>
+    <!-- Setting: which installed RetroArch app/package to launch games with. -->
+    <string name="setting_ra_package">RetroArchãƒ‘ãƒƒã‚±ãƒ¼ã‚¸</string>
+    <string name="setting_scan_library">ã‚¹ã‚­ãƒ£ãƒ³ãƒ¢ãƒ¼ãƒ‰</string>
+    <!-- Scan Mode value: scan the library automatically. -->
+    <string name="value_automatically">è‡ªå‹•</string>
+    <!-- Scan Mode value: scan the library by hand. "Manual" here is the adverb (by hand), not a game's instruction manual. -->
+    <string name="value_manually">ãƒžãƒ‹ãƒ¥ã‚¢ãƒ«</string>
+    <!-- RA = RetroAchievements account username. -->
+    <string name="setting_ra_username">ãƒ¦ãƒ¼ã‚¶ãƒ¼å</string>
+    <!-- RA = RetroAchievements account password. -->
+    <string name="setting_ra_password">ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰</string>
+    <!-- RA = RetroAchievements. Button to log in. -->
+    <string name="setting_ra_login">ãƒ­ã‚°ã‚¤ãƒ³</string>
+    <!-- RomM -->
+    <!-- RomM server address (host/URL). -->
+    <string name="setting_romm_host">ãƒ›ã‚¹ãƒˆ</string>
+    <!-- Toggle: sync save files with the RomM server. -->
+    <string name="setting_romm_save_sync">åŒæœŸã‚’ä¿å­˜</string>
+    <string name="setting_romm_save_backups">ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ä¿å­˜</string>
+    <string name="dialog_romm_device_name_title">ã“ã®ãƒ‡ãƒã‚¤ã‚¹ã«åå‰ã‚’ä»˜ã‘ã‚‹</string>
+    <string name="romm_save_sync_needs_500">RomM5.0ä»¥ä¸ŠãŒå¿…è¦ã§ã™</string>
+    <string name="save_conflict_title">ç«¶åˆã‚’ä¿å­˜</string>
+    <string name="save_conflict_keep_local">ã“ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’ä¿æŒ</string>
+    <string name="save_conflict_use_server">ã‚µãƒ¼ãƒãƒ¼ã‚’ä½¿ç”¨</string>
+    <string name="save_conflict_subtitle">ã‚µãƒ¼ãƒãƒ¼ä¸Šã§å¤‰æ›´ã•ã‚Œã¾ã—ãŸ</string>
+    <string name="save_stale_title">ã‚µãƒ¼ãƒãƒ¼ã«ã¯æ–°ã—ã„ã‚»ãƒ¼ãƒ–æ©Ÿèƒ½ãŒã‚ã‚Šã¾ã™</string>
+    <string name="save_stale_play_local">ã¨ã«ã‹ããƒ­ãƒ¼ã‚«ãƒ«ã§ãƒ—ãƒ¬ã‚¤ã™ã‚‹</string>
+    <string name="setting_romm_allow_self_signed">è‡ªå·±ç½²åè¨¼æ˜Žæ›¸ã‚’è¨±å¯ã™ã‚‹</string>
+    <string name="setting_romm_pair">ä»–ã®ãƒ‡ãƒã‚¤ã‚¹ã¨ãƒšã‚¢ãƒªãƒ³ã‚°ã™ã‚‹</string>
+    <string name="setting_romm_pair_code">ã‚³ãƒ¼ãƒ‰ã¨ãƒšã‚¢ãƒªãƒ³ã‚°ã™ã‚‹</string>
+    <string name="romm_connecting">RomMã«æŽ¥ç¶šä¸­</string>
+    <string name="romm_pair_invalid">Invalid pairing code</string>
+    <string name="romm_pair_failed">ãƒšã‚¢ãƒªãƒ³ã‚°ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="romm_pair_rate_limited">è©¦è¡Œå›žæ•°ãŒå¤šã™ãŽã¾ã™ã€‚å¾Œã§ã‚‚ã†ä¸€åº¦ãŠè©¦ã—ãã ã•ã„ã€‚</string>
+    <string name="romm_unreachable">ã‚µãƒ¼ãƒãƒ¼ã«æŽ¥ç¶šã§ãã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="romm_pair_waiting">ã“ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚¹ã‚­ãƒ£ãƒ³ã—ã¦ãƒšã‚¢ãƒªãƒ³ã‚°ã—ã¦ãã ã•ã„</string>
+    <string name="romm_pair_denied">ãƒšã‚¢ãƒªãƒ³ã‚°ãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒæ‹’å¦ã•ã‚Œã¾ã—ãŸ</string>
+    <string name="romm_pair_expired">ãƒšã‚¢ãƒªãƒ³ã‚°ãƒªã‚¯ã‚¨ã‚¹ãƒˆã®æœ‰åŠ¹æœŸé™ãŒåˆ‡ã‚Œã¾ã—ãŸ</string>
+    <string name="romm_server_too_old">RomMã‚µãƒ¼ãƒãƒ¼ãŒå¤ã™ãŽã¾ã™ã€‚ãƒãƒ¼ã‚¸ãƒ§ãƒ³5.0ä»¥é™ãŒå¿…è¦ã§ã™ã€‚</string>
+    <string name="romm_conn_title">RomMæŽ¥ç¶šæƒ…å ±</string>
+    <string name="romm_conn_account">ã‚¢ã‚«ã‚¦ãƒ³ãƒˆ</string>
+    <string name="romm_conn_server">ã‚µãƒ¼ãƒãƒ¼</string>
+    <string name="romm_detail_region">åœ°åŸŸ</string>
+    <string name="romm_detail_revision">ãƒªãƒ“ã‚¸ãƒ§ãƒ³</string>
+    <string name="romm_detail_size">ã‚µã‚¤ã‚º</string>
+    <string name="romm_detail_languages">è¨€èªž</string>
+    <string name="romm_detail_publisher">ç™ºè¡Œè€…</string>
+    <string name="romm_detail_released">è§£æ”¾æ¸ˆã¿</string>
+    <string name="romm_detail_genre">ã‚¸ãƒ£ãƒ³ãƒ«</string>
+    <string name="romm_detail_players">ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼</string>
+    <string name="romm_detail_on_device">ãƒ‡ãƒã‚¤ã‚¹ä¸Š</string>
+    <string name="romm_detail_not_on_device">ãƒ‡ãƒã‚¤ã‚¹ä¸Šã«ã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="romm_detail_download">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="romm_version_picker_title">ã©ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <!-- Bottom-bar button opening the game's instruction manual (a document), not "manual/by hand". -->
+    <string name="label_manual">ãƒžãƒ‹ãƒ¥ã‚¢ãƒ«</string>
+    <!-- The game's instruction manual (document), not "manual/by hand". -->
+    <string name="romm_download_manual">ãƒžãƒ‹ãƒ¥ã‚¢ãƒ«</string>
+    <string name="romm_syncing" tools:ignore="TypographyEllipsis">ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’æ§‹ç¯‰ã—ã¦ã„ã¾ã™...</string>
+    <!-- Cache-building status. %1$s is the platform name. -->
+    <string name="romm_syncing_platform" tools:ignore="TypographyEllipsis">ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’æ§‹ç¯‰ä¸­...\n%1$s</string>
+    <string name="romm_sync_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_sync_error">RomMã«åˆ°é”ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã•ã‚ŒãŸãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’è¡¨ç¤ºã—ã¦ã„ã¾ã™ã€‚</string>
+    <string name="romm_download_queue">ã‚­ãƒ¥ãƒ¼ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="romm_download_queued">ã‚­ãƒ¥ãƒ¼ã«å…¥ã‚Šã¾ã—ãŸ</string>
+    <string name="romm_download_downloading">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­</string>
+    <string name="romm_download_failed">å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="romm_download_empty">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ãªã—</string>
+    <string name="romm_download_completed">å®Œäº†</string>
+    <string name="romm_osd_download_queued">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«è¿½åŠ ã—ã¾ã—ãŸ</string>
+    <string name="romm_osd_manual_queued">æ‰‹å‹•ã§ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’è¿½åŠ </string>
+    <!-- Toast. %1$d = number added to the download queue. -->
+    <plurals name="romm_osd_downloads_queued">
+        <item quantity="other">%1$d ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«è¿½åŠ ã—ã¾ã—ãŸ</item>
+    </plurals>
+    <string name="romm_download_notification_title">RomMãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="romm_download_notification_starting">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’é–‹å§‹</string>
+    <string name="romm_download_notification_active">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­</string>
+    <!-- Notification. %1$d is the number of active downloads. -->
+    <string name="romm_download_notification_count">%1$d ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­</string>
+    <string name="romm_art_notification_active">ãƒœãƒƒã‚¯ã‚¹ã‚¢ãƒ¼ãƒˆã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­</string>
+    <string name="label_retry">å†è©¦è¡Œã™ã‚‹</string>
+    <string name="label_cancel_all">ã™ã¹ã¦ã‚­ãƒ£ãƒ³ã‚»ãƒ«</string>
+    <string name="romm_settings_concurrent">åŒæ™‚ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="romm_settings_cover_art">ã‚«ãƒãƒ¼ã‚¢ãƒ¼ãƒˆ</string>
+    <string name="romm_settings_download_art">ä¸è¶³ã—ã¦ã„ã‚‹ã‚¢ãƒ¼ãƒˆã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="romm_settings_platforms">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã®è¡¨ç¤º/éžè¡¨ç¤º</string>
+    <string name="romm_settings_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®è¡¨ç¤º/éžè¡¨ç¤º</string>
+    <string name="romm_settings_server_info">ã‚µãƒ¼ãƒãƒ¼æƒ…å ±</string>
+    <string name="romm_settings_advanced">é«˜åº¦ãªè¨­å®š</string>
+    <string name="romm_settings_rebuild">Rebuild Cache</string>
+    <string name="romm_actions_title">RomMã‚¯ã‚¤ãƒƒã‚¯ãƒ¡ãƒ‹ãƒ¥ãƒ¼</string>
+    <string name="romm_settings_title">RomMè¨­å®š</string>
+    <string name="romm_platforms_title">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã‚’è¡¨ç¤º</string>
+    <string name="romm_platforms_empty">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <!-- Screen title. %1$s is the platform name. -->
+    <string name="romm_firmware_screen_title">%1$s ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢</string>
+    <string name="romm_global_search_title">æ¤œç´¢</string>
+    <string name="romm_no_results">çµæžœãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="romm_firmware_loading">èª­ã¿è¾¼ã¿ä¸­</string>
+    <string name="romm_firmware_empty">ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="romm_firmware_error">ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã‚’èª­ã¿è¾¼ã‚ã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="romm_firmware_not_on_device">ãƒ‡ãƒã‚¤ã‚¹ã§ã¯ã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="romm_firmware_on_device">ãƒ‡ãƒã‚¤ã‚¹ä¸Š</string>
+    <string name="romm_art_default">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ</string>
+    <string name="romm_art_off">ã‚ªãƒ•</string>
+    <string name="romm_art_box2d">2D ãƒœãƒƒã‚¯ã‚¹</string>
+    <string name="romm_art_box3d">Box 3D</string>
+    <!-- Art type: a composite/mixed artwork image. -->
+    <string name="romm_art_mix">ãƒŸãƒƒã‚¯ã‚¹</string>
+    <!-- Art type: the game's title-screen image, not a text title. -->
+    <string name="romm_art_title">ã‚¿ã‚¤ãƒˆãƒ«</string>
+    <string name="romm_art_screenshot">ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚·ãƒ§ãƒƒãƒˆ</string>
+    <!-- Art type: the arcade marquee image. -->
+    <string name="romm_art_marquee">Marquee</string>
+    <string name="label_disconnect">åˆ‡æ–­</string>
+    <string name="romm_rebuild_confirm">RomMãƒ­ãƒ¼ã‚«ãƒ«ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’å†æ§‹ç¯‰ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <string name="romm_disconnect_confirm">RomMã‹ã‚‰åˆ‡æ–­ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <string name="romm_cancel_confirm">ã“ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <string name="romm_cancel_all_confirm">ã™ã¹ã¦ã®ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <string name="romm_art_results_title">ãƒœãƒƒã‚¯ã‚¹ã‚¢ãƒ¼ãƒˆã®çµæžœ</string>
+    <string name="romm_art_added">ã‚¢ãƒ¼ãƒˆã‚’è¿½åŠ </string>
+    <string name="romm_art_already">æ—¢ã«ã‚¢ãƒ¼ãƒˆã‚’æŒã£ã¦ã„ã¾ã™</string>
+    <string name="romm_art_no_match">ROMMãŒä¸€è‡´ã—ã¾ã›ã‚“</string>
+    <string name="romm_art_failed">å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="romm_art_section_no_match">ä¸€è‡´ã™ã‚‹ã‚‚ã®ã¯ã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="romm_art_section_failed">å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="romm_art_done">å®Œäº†</string>
+    <string name="romm_collections_title">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_collection_group_user">ãƒžã‚¤ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <!-- RomM "Virtual" collections (auto-grouped, e.g. by franchise or genre). -->
+    <string name="romm_collection_group_virtual">ä»®æƒ³è¨­å®š</string>
+    <!-- RomM "Smart" collections (rule-based, auto-updating). -->
+    <string name="romm_collection_group_smart">ã‚¹ãƒžãƒ¼ãƒˆ</string>
+    <string name="romm_collections_my">ãƒžã‚¤ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_collections_smart">ã‚¹ãƒžãƒ¼ãƒˆã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_collections_virtual">ä»®æƒ³ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_vtype_franchise">ãƒ•ãƒ©ãƒ³ãƒãƒ£ã‚¤ã‚º</string>
+    <string name="romm_vtype_collection">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="romm_vtype_genre">Genres</string>
+    <string name="romm_vtype_company">ä¼šç¤¾å</string>
+    <string name="romm_vtype_mode">ã‚²ãƒ¼ãƒ ãƒ¢ãƒ¼ãƒ‰</string>
+    <string name="setting_logging">ãƒ­ã‚°</string>
+    <!-- Advanced toggle: log the intents used to launch external emulators. -->
+    <string name="setting_audit_emulator_intents">ç›£æŸ»ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®ç›®çš„</string>
+    <string name="logging_title">ãƒ­ã‚°</string>
+    <string name="logging_rom_scan">ROM ã‚¹ã‚­ãƒ£ãƒ³</string>
+    <string name="logging_input">Input</string>
+    <string name="logging_session">ã‚²ãƒ¼ãƒ ã‚»ãƒƒã‚·ãƒ§ãƒ³</string>
+    <string name="logging_storage">ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸</string>
+    <string name="setting_input_tester">Input Tester</string>
+    <!-- Input tester row. %1$d = player number, %2$s = device name, %3$d = device id. -->
+    <string name="input_tester_device_format">P%1$d â€¢ %2$s â€¢ Dev%3$d</string>
+    <string name="input_tester_exit_hint">ã‚¹ã‚¿ãƒ¼ãƒˆã‚­ãƒ¼ã‚’æŠ¼ã—ãŸã¾ã¾ã«ã—ã¦çµ‚äº†ã—ã¾ã™</string>
+    <string name="input_tester_device_keyboard">keyboard</string>
+    <string name="input_tester_device_unknown">ä¸æ˜Ž</string>
+    <!-- Input tester: the device sent events but has no button mapping. -->
+    <string name="input_tester_unbound">ãƒžãƒƒãƒ”ãƒ³ã‚°ãªã—ã§ç™ºç”Ÿã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ</string>
+    <!-- Setting values -->
+    <string name="value_on">ã‚ªãƒ³</string>
+    <string name="value_off">ã‚ªãƒ•</string>
+    <string name="value_show">è¡¨ç¤º</string>
+    <string name="value_hide">éžè¡¨ç¤º</string>
+    <string name="value_none">ãªã—</string>
+    <string name="value_selected">é¸æŠžæ¸ˆã¿</string>
+    <string name="value_cannelloni_root">Cannelloniãƒ«ãƒ¼ãƒˆ</string>
+    <!-- Content Mode value: the default platform view. -->
+    <string name="value_platforms">ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ</string>
+    <string name="value_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®ã¿</string>
+    <string name="value_fit">åˆã‚ã›ã‚‹</string>
+    <string name="value_original">ã‚ªãƒªã‚¸ãƒŠãƒ«</string>
+    <string name="value_fit_width">Fit Width</string>
+    <string name="value_fit_height">é«˜ã•ã‚’åˆã‚ã›ã‚‹</string>
+    <string name="value_percent">å‰²åˆ</string>
+    <string name="value_icon">ã‚¢ã‚¤ã‚³ãƒ³</string>
+    <string name="value_12h">12æ™‚é–“</string>
+    <string name="value_24h">24æ™‚é–“</string>
+    <string name="value_not_set">æœªè¨­å®š</string>
+    <string name="value_not_installed">ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ãªã„</string>
+    <string name="value_none_installed">ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="value_active">ã‚¢ã‚¯ãƒ†ã‚£ãƒ–</string>
+    <!-- Dialogs -->
+    <!-- %1$s = the list or collection name. -->
+    <string name="empty_list">%1$s ã¯ç©ºã§ã™</string>
+    <!-- Confirm dialog. %1$s = item name. -->
+    <string name="dialog_delete_confirm">ã€Œ%1$sã€ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <!-- Shown when a per-game override is deliberately set to empty. -->
+    <string name="value_empty_override">(ç©ºã®ä¸Šæ›¸ã)</string>
+    <!-- Shown in place of an emulator name when a platform has no emulator mapped yet. -->
+    <string name="value_needs_setup">ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—ãŒå¿…è¦</string>
+    <string name="emulator_platform_setting">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ è¨­å®š</string>
+    <!-- %1$s = the emulator name the platform is mapped to. -->
+    <string name="emulator_platform_setting_named">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ è¨­å®š (%1$s)</string>
+    <string name="rename_error_directory">ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚’å¤‰æ›´ã§ãã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="rename_error_generic">åå‰ã®å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="rename_cannot_resolve_dir">ã‚²ãƒ¼ãƒ ãƒ•ã‚©ãƒ«ãƒ€ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="rename_already_exists">ãã®åå‰ã®ã‚²ãƒ¼ãƒ ã¯æ—¢ã«å­˜åœ¨ã—ã¾ã™</string>
+    <string name="rename_backup_failed">ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã§ãã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="rename_relocate_failed">ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã‚’ç§»å‹•ã§ãã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="boot_preparing">æº–å‚™ä¸­</string>
+    <string name="boot_import_failed">ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®ã‚¤ãƒ³ãƒãƒ¼ãƒˆã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="import_platforms">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã®ã‚«ã‚¿ãƒ­ã‚°</string>
+    <string name="import_roms">ROMãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æ­©ã</string>
+    <string name="import_apps">ã‚¢ãƒ—ãƒªã®ã‚«ã‚¿ãƒ­ã‚°</string>
+    <string name="import_favorites">ãŠæ°—ã«å…¥ã‚Šã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã‚’ä½œæˆä¸­</string>
+    <string name="import_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®ç§»è¡Œ</string>
+    <string name="import_collection_parents">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³éšŽå±¤ã®ç§»è¡Œ</string>
+    <string name="import_overrides">ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã‚’ç§»è¡Œä¸­</string>
+    <string name="import_ra_ids">RetroAchievements IDã®ç§»è¡Œ</string>
+    <string name="import_recently_played">æœ€è¿‘å†ç”Ÿã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã®ç§»è¡Œ</string>
+    <string name="import_ordering">é †åºã‚’ç§»è¡Œä¸­</string>
+    <string name="import_archive">ãƒ¬ã‚¬ã‚·ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ä¸­</string>
+    <string name="import_done">å®Œäº†</string>
+    <!-- Boot progress. %1$s = tag/category name. -->
+    <string name="import_cataloging_tag">ã‚«ã‚¿ãƒ­ã‚° %1$s</string>
+    <string name="housekeeping_db_title">ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®æ›´æ–°</string>
+    <string name="housekeeping_db_subtitle">ãƒ¬ã‚¬ã‚·ãƒ¼ãƒ‡ãƒ¼ã‚¿ã®ç§»è¡Œ</string>
+    <string name="housekeeping_initial_title">ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®è¨­å®š</string>
+    <string name="housekeeping_refresh_title">ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’æ›´æ–°ä¸­</string>
+    <string name="update_download_error_server">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ã‚µãƒ¼ãƒãƒ¼ãŒã‚¨ãƒ©ãƒ¼ã‚’è¿”ã—ã¾ã—ãŸã€‚ã—ã°ã‚‰ãã—ã¦ã‹ã‚‰ã‚‚ã†ä¸€åº¦ãŠè©¦ã—ãã ã•ã„ã€‚</string>
+    <string name="update_download_error_network">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚æŽ¥ç¶šã‚’ç¢ºèªã—ã¦ã‚‚ã†ä¸€åº¦ãŠè©¦ã—ãã ã•ã„ã€‚</string>
+    <string name="launch_error_resolve_file">èµ·å‹•ãƒ•ã‚¡ã‚¤ãƒ«ã®è§£æ±ºã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="launch_error_extract">ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã®æŠ½å‡ºã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="launch_error_generic">ã‚²ãƒ¼ãƒ ã®èµ·å‹•ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <!-- %1$s = file name. -->
+    <string name="launch_error_update_ricotta">ç¶šè¡Œã™ã‚‹ã«ã¯ RicottaArch ã‚’æ›´æ–°</string>
+    <string name="launch_error_update_cannelloni">Cannelloniã‚’æ›´æ–°ã—ã¦ç¶šè¡Œã™ã‚‹</string>
+    <!-- %1$s = core name, %2$s = emulator app. -->
+    <string name="dialog_missing_core_pkg">%1$s ã¯ %2$s ã«ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚</string>
+    <!-- %1$s = core name. -->
+    <string name="dialog_missing_core_plain">%1$s ã¯ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚</string>
+    <string name="dialog_missing_core_hint">ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãƒžãƒƒãƒ”ãƒ³ã‚°ã§è¨­å®šã—ã¾ã™ã€‚</string>
+    <!-- %1$s = app name. -->
+    <string name="dialog_missing_app">%1$s ã¯ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚</string>
+    <!-- %1$s = folder path. -->
+    <string name="dialog_missing_bios_header">%1$sã«ã¯å°‘ãªãã¨ã‚‚1ã¤ã®BIOSãƒ•ã‚¡ã‚¤ãƒ«ãŒå¿…è¦ã§ã™:</string>
+    <string name="dialog_title_missing_core">æ¬ ã‘ã¦ã„ã‚‹ã‚³ã‚¢</string>
+    <string name="dialog_title_missing_app">ä¸è¶³ã—ã¦ã„ã‚‹ã‚¢ãƒ—ãƒª</string>
+    <string name="dialog_title_launch_error">èµ·å‹•ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="dialog_rename_success">åå‰ã‚’å¤‰æ›´ã—ã¾ã—ãŸ</string>
+    <!-- %1$s = error detail. -->
+    <string name="dialog_rename_failed">åå‰ã®å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ: %1$s</string>
+    <string name="dialog_quit_confirm">æœ¬å½“ã«çµ‚äº†ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <!-- Formatted strings -->
+    <!-- %1$s = collection name. -->
+    <string name="collection_created">%1$s ãŒä½œæˆã•ã‚Œã¾ã—ãŸ</string>
+    <!-- %1$d = number of items selected. -->
+    <string name="selected_count">%1$d Selected</string>
+    <!-- Onboarding wizard -->
+    <string name="onboarding_header">ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã‚’è¨­å®š</string>
+    <string name="onboarding_permissions_title">æ¨©é™ã¨ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸</string>
+    <string name="onboarding_storage_label">ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¢ã‚¯ã‚»ã‚¹</string>
+    <string name="onboarding_storage_rationale">Cannelloniã¯ROMã‚„ä¿å­˜ã€ã‚¢ãƒ¼ãƒˆãªã©ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ãŒå¿…è¦ã§ã™ã€‚\nã“ã‚ŒãŒãªã‘ã‚Œã°Cannelloniã¯ä½•ã‚‚ã§ãã¾ã›ã‚“ã€‚</string>
+    <string name="onboarding_status_granted">ä»˜ä¸Žæ¸ˆã¿</string>
+    <string name="onboarding_status_not_granted">è¨±å¯ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="onboarding_press_a_to_select_folder">Aã‚’æŠ¼ã—ã¦ãƒ•ã‚©ãƒ«ãƒ€ã‚’é¸æŠž</string>
+    <string name="onboarding_storage_locked_hint">ã‚¢ã‚¯ã‚»ã‚¹è¨±å¯ãŒä»˜ä¸Žã•ã‚Œã‚‹ã¨è¨­å®šã§ãã¾ã™ã€‚</string>
+    <string name="onboarding_select_folder">ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã‚’é¸æŠž</string>
+    <string name="onboarding_location_label">å ´æ‰€</string>
+    <!-- Boot error screen -->
+    <string name="boot_error_title">å•é¡ŒãŒç™ºç”Ÿã—ã¾ã—ãŸ</string>
+    <!-- Storage row (shared with onboarding) -->
+    <string name="setup_folder_unset">æœªé¸æŠž</string>
+    <!-- System list -->
+    <string name="empty_content">ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚è¿½åŠ ã—ã¦ãã ã•ã„ï¼</string>
+    <!-- 5GH = Five Game Handheld; keep "5GH" as-is. -->
+    <string name="empty_fgh_collection">5GHã®ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã¯ç©ºã§ã™ã€‚ã„ã£ã±ã„ã«ã—ã¾ã—ã‚‡ã†ï¼</string>
+    <string name="label_recently_played">æœ€è¿‘ãƒ—ãƒ¬ã‚¤ã—ãŸæ›²</string>
+    <string name="label_favorites">ãŠæ°—ã«å…¥ã‚Š</string>
+    <string name="label_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <!-- Screen title. %1$s = the search query. -->
+    <string name="global_search_title">æ¤œç´¢: \"%1$s\"</string>
+    <string name="origin_tools">ãƒ„ãƒ¼ãƒ«</string>
+    <!-- Section label: standalone game ports. -->
+    <string name="origin_ports">ãƒãƒ¼ãƒˆ</string>
+    <string name="origin_collection">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <!-- About -->
+    <!-- App tagline; playful, "filling" is a cannelloni pun. Keep the light tone. -->
+    <!-- Kitchen -->
+    <!-- Keep "Nonna's Kitchen" verbatim. -->
+    <string name="kitchen_notification_running">Nonnaã®ã‚­ãƒƒãƒãƒ³ãŒç¨¼åƒã—ã¦ã„ã¾ã™</string>
+    <!-- Nonna's Kitchen runs a local file server. -->
+    <string name="kitchen_notification_active">ãƒ•ã‚¡ã‚¤ãƒ«ã‚µãƒ¼ãƒãƒ¼ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã§ã™</string>
+    <string name="kitchen_notification_stop">åœæ­¢</string>
+    <!-- Keep "Nonna's Kitchen" verbatim. -->
+    <string name="kitchen_notification_error_title">Nonna ã‚­ãƒƒãƒãƒ³ã‚’èµ·å‹•ã§ãã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="kitchen_notification_error_text">ãƒ•ã‚¡ã‚¤ãƒ«ã‚µãƒ¼ãƒãƒ¼ã®ãƒãƒ¼ãƒˆãŒåˆ©ç”¨ã§ãã¾ã›ã‚“</string>
+    <!-- Search -->
+    <string name="search_global">ã‚°ãƒ­ãƒ¼ãƒãƒ«æ¤œç´¢</string>
+    <string name="search_romm">RomMæ¤œç´¢</string>
+    <!-- %1$s = platform name. -->
+    <string name="search_in_platform">%1$s æ¤œç´¢</string>
+    <!-- Keyboard entry headers -->
+    <string name="keyboard_title_new_collection">æ–°ã—ã„ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="keyboard_title_rename_collection">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ã®åå‰ã‚’å¤‰æ›´</string>
+    <string name="keyboard_title_new_folder">æ–°è¦ãƒ•ã‚©ãƒ«ãƒ€</string>
+    <string name="keyboard_title_rename_game">ã‚²ãƒ¼ãƒ ã®åå‰ã‚’å¤‰æ›´</string>
+    <string name="keyboard_title_rename_app">ã‚¢ãƒ—ãƒªã®åå‰ã‚’å¤‰æ›´</string>
+    <string name="keyboard_title_rename_folder">ãƒ•ã‚©ãƒ«ãƒ€ã®åå‰ã‚’å¤‰æ›´</string>
+    <string name="keyboard_title_rename_platform">ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ åã‚’å¤‰æ›´</string>
+    <string name="keyboard_title_new_slot">æ–°ã—ã„ã‚¹ãƒ­ãƒƒãƒˆ</string>
+    <string name="keyboard_title_rename_slot">ã‚¹ãƒ­ãƒƒãƒˆåã®å¤‰æ›´</string>
+    <string name="keyboard_title_rename_controller">ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åå‰ã‚’å¤‰æ›´</string>
+    <!-- Quick menu -->
+    <string name="quick_menu_title">ã‚¯ã‚¤ãƒƒã‚¯ãƒ¡ãƒ‹ãƒ¥ãƒ¼</string>
+    <string name="quick_menu_romm">RomMã‚’é–²è¦§ã™ã‚‹</string>
+    <string name="quick_menu_download_queue">ã‚­ãƒ¥ãƒ¼ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <string name="quick_menu_rescan">ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’å†ã‚¹ã‚­ãƒ£ãƒ³</string>
+    <string name="quick_menu_info">ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯æƒ…å ±</string>
+    <string name="quick_menu_sync_history">åŒæœŸå±¥æ­´ã‚’ä¿å­˜</string>
+    <string name="sync_history_title">åŒæœŸå±¥æ­´ã‚’ä¿å­˜</string>
+    <string name="sync_history_empty">åŒæœŸå±¥æ­´ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="sync_relative_now">ã¡ã‚‡ã†ã©ä»Š</string>
+    <string name="quick_info_title">ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯æƒ…å ±</string>
+    <string name="quick_info_ip">IP ã‚¢ãƒ‰ãƒ¬ã‚¹</string>
+    <!-- URL to reach the Nonna's Kitchen file server. -->
+    <string name="quick_info_kitchen_url">ã‚­ãƒƒãƒãƒ³URL</string>
+    <string name="quick_info_kitchen_off">ã‚­ãƒƒãƒãƒ³ãŒç¨¼åƒã—ã¦ã„ã¾ã›ã‚“</string>
+    <string name="quick_info_offline">ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <!-- RetroAchievements -->
+    <string name="ra_logged_in_as">ã¨ã—ã¦ãƒ­ã‚°ã‚¤ãƒ³</string>
+    <!-- RA = RetroAchievements. -->
+    <string name="ra_login_failed">RA: ãƒ­ã‚°ã‚¤ãƒ³ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="ra_login_invalid">ãƒ¦ãƒ¼ã‚¶ãƒ¼åã¾ãŸã¯ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="ra_status_online">ã‚ªãƒ³ãƒ©ã‚¤ãƒ³</string>
+    <string name="ra_status_offline">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³</string>
+    <!-- %1$d = achievements awaiting sync. -->
+    <string name="ra_status_offline_pending">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ â€¢ %1$d ä¿ç•™ä¸­ã®åŒæœŸ</string>
+    <string name="ra_detect_not_logged_in">ãƒ­ã‚°ã‚¤ãƒ³ã—ã¦ã„ã¾ã›ã‚“</string>
+    <string name="ra_detect_not_recognized">ã‚²ãƒ¼ãƒ ãŒèªè­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="ra_detect_no_achievements">æˆæžœã¯å…¬é–‹ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="ra_detect_mem_failed">ãƒ¡ãƒ¢ãƒªåˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <!-- %d = achievement count. -->
+    <plurals name="ra_detect_active">
+        <item quantity="other">ã‚¢ã‚¯ãƒ†ã‚£ãƒ– â€¢ %d ã‚¢ãƒãƒ¼ãƒ–ãƒ¡ãƒ³ãƒˆæ•°</item>
+    </plurals>
+    <!-- %d = number of achievements synced. -->
+    <plurals name="ra_sync_done">
+        <item quantity="other">%d é”æˆã‚’åŒæœŸã—ã¾ã—ãŸ</item>
+    </plurals>
+    <!-- Counts of synced and failed achievements. -->
+    <string name="ra_sync_partial">%1$d åŒæœŸã€ %2$d å¤±æ•—</string>
+    <!-- OSD toast. %1$s = save slot name. -->
+    <string name="osd_state_saved">%1$s ã«ä¿å­˜ã—ã¾ã—ãŸ</string>
+    <!-- OSD toast. %1$s = save slot name. -->
+    <string name="osd_state_loaded">èª­ã¿è¾¼ã¾ã‚ŒãŸ %1$s</string>
+    <!-- OSD toast. %1$s = save slot name. -->
+    <string name="osd_state_deleted">%1$sã‚’å‰Šé™¤ã—ã¾ã—ãŸ</string>
+    <string name="osd_reset">Reset</string>
+    <!-- OSD toast. %1$s = scaling mode name. -->
+    <string name="osd_scaling">æ‹¡å¤§ç¸®å°: %1$s</string>
+    <!-- OSD toast. %1$s = shader preset name. -->
+    <string name="osd_shader">ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼: %1$s</string>
+    <!-- OSD toast. %1$s = mode/item name. -->
+    <string name="osd_switched_to">%1$sã«åˆ‡ã‚Šæ›¿ãˆã¾ã—ãŸ</string>
+    <!-- OSD toast. %1$s = game name (setting saved per-game). -->
+    <string name="osd_saved_for">%1$s ã«ä¿å­˜ã—ã¾ã—ãŸ</string>
+    <string name="osd_saved_for_game">ã“ã®ã‚²ãƒ¼ãƒ ã«ä¿å­˜ã—ã¾ã—ãŸ</string>
+    <!-- OSD toast. %1$s = controller name, %2$s = player slot. -->
+    <string name="osd_controller_connected_named">%1$s ã¯ %2$s ã«æŽ¥ç¶šã•ã‚Œã¾ã—ãŸ</string>
+    <string name="osd_buttons_reset">ãƒœã‚¿ãƒ³ã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã«ãƒªã‚»ãƒƒãƒˆ</string>
+    <!-- %1$d = disc number (multi-disc games). -->
+    <string name="osd_disc_fallback">ãƒ‡ã‚£ã‚¹ã‚¯ %1$d</string>
+    <string name="igm_quit">çµ‚äº†</string>
+    <string name="igm_cheats">ãƒãƒ¼ãƒˆ</string>
+    <string name="title_cheats">ãƒãƒ¼ãƒˆ</string>
+    <string name="label_restore_session">æœ€å¾Œã®ã‚»ãƒƒã‚·ãƒ§ãƒ³ã‚’å¾©å…ƒ</string>
+    <!-- Scaling mode: use the size the emulator core reports. -->
+    <string name="scaling_core_reported">ã‚³ã‚¢ãŒå ±å‘Šã•ã‚Œã¾ã—ãŸ</string>
+    <string name="scaling_integer">æ•´æ•°</string>
+    <!-- Scaling mode: integer scaling pushed beyond 1x to fill more of the screen. -->
+    <string name="scaling_integer_overscale">Integer Overscale</string>
+    <!-- Scaling mode: fit the screen while keeping the aspect ratio. -->
+    <string name="scaling_aspect_screen">ã‚¢ã‚¹ãƒšã‚¯ãƒˆç”»é¢</string>
+    <string name="scaling_fullscreen">å…¨ç”»é¢</string>
+    <!-- Indicates a setting applies globally (all games). -->
+    <string name="override_source_global">ã‚°ãƒ­ãƒ¼ãƒãƒ«</string>
+    <!-- Indicates a setting applies only to the current game. -->
+    <string name="override_source_game">ã“ã®ã‚²ãƒ¼ãƒ </string>
+    <string name="device_controller">ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©</string>
+    <!-- OSD toast. %1$d = player number, %2$s = controller name. -->
+    <string name="osd_controller_connected">P%1$d: %2$s</string>
+    <!-- OSD toast. %1$d = player number, %2$s = controller name. -->
+    <string name="osd_controller_disconnected_port">P%1$d: %2$s ãŒåˆ‡æ–­ã•ã‚Œã¾ã—ãŸ</string>
+    <!-- OSD toast. %1$s = controller name. -->
+    <string name="osd_controller_disconnected">%1$s ãŒåˆ‡æ–­ã•ã‚Œã¾ã—ãŸ</string>
+    <!-- RA login OSD. %1$s = username, %2$s = display name, %3$d/%4$d = unlocked/total achievements. -->
+    <string name="ra_login_success">RA: %1$s (%2$s) Â· %3$d/%4$d ãƒ­ãƒƒã‚¯è§£é™¤</string>
+    <string name="ra_init_failed">RA: åˆæœŸåŒ–ã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <string name="ra_load_not_recognized">RA: ã‚²ãƒ¼ãƒ ãŒèªè­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="ra_load_no_achievements">RA: ã“ã®ã‚²ãƒ¼ãƒ ã®å®Ÿç¸¾ã¯ã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="ra_load_offline_pending">RA: ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ (ã‚²ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿åˆ©ç”¨ä¸å¯)</string>
+    <!-- Credits -->
+    <string name="credits_title">ã‚¯ãƒ¬ã‚¸ãƒƒãƒˆã¨ãƒ©ã‚¤ã‚»ãƒ³ã‚¹</string>
+    <!-- Core picker / nav -->
+    <string name="no_compatible_cores">äº’æ›æ€§ã®ã‚ã‚‹ã‚³ã‚¢ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“</string>
+    <string name="no_collections">ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="title_child_collections">å­ã‚³ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="title_shortcuts">ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ</string>
+    <string name="shortcut_hold_prompt" tools:ignore="TypographyEllipsis">1 ã¤ä»¥ä¸Šã®ãƒœã‚¿ãƒ³ã‚’é•·æŠ¼ã—ã—ã¦ãã ã•ã„...</string>
+    <!-- Update download -->
+    <string name="update_retry">å†è©¦è¡Œã™ã‚‹</string>
+    <string name="restart_required">å¤‰æ›´ã‚’é©ç”¨ã™ã‚‹ã«ã¯å†èµ·å‹•ãŒå¿…è¦ã§ã™ã€‚</string>
+    <!-- IGM screen titles -->
+    <string name="igm_settings">è¨­å®š</string>
+    <string name="igm_video">ãƒ“ãƒ‡ã‚ª</string>
+    <string name="igm_advanced">é«˜åº¦ãªè¨­å®š</string>
+    <string name="igm_shader_settings">ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è¨­å®š</string>
+    <string name="igm_emulator">ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ãƒ¼</string>
+    <string name="igm_save_changes">å¤‰æ›´ã‚’ä¿å­˜</string>
+    <string name="igm_input">Input</string>
+    <string name="igm_button_mappings">ãƒœã‚¿ãƒ³ã®ãƒžãƒƒãƒ”ãƒ³ã‚°</string>
+    <string name="igm_left_stick_dpad">æ–¹å‘ãƒ‘ãƒƒãƒ‰ã¨ã—ã¦å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯</string>
+    <string name="igm_dpad_mode">æ–¹å‘ãƒ‘ãƒƒãƒ‰ãƒ¢ãƒ¼ãƒ‰ï¼ˆãƒ™ãƒ¼ã‚¿ç‰ˆï¼‰</string>
+    <!-- D-Pad Mode value: 8 directions. -->
+    <string name="value_dpad_8way">8-way</string>
+    <!-- D-Pad Mode value: 4 directions. -->
+    <string name="value_dpad_4way">4-way</string>
+    <string name="igm_save_and_quit">ä¿å­˜ã—ã¦çµ‚äº†</string>
+    <string name="title_guide">ã‚¬ã‚¤ãƒ‰</string>
+    <string name="guide_zoom">ã‚ºãƒ¼ãƒ </string>
+    <!-- IGM info labels -->
+    <string name="info_core">ã‚³ã‚¢</string>
+    <string name="info_rom">ROM</string>
+    <!-- Info label: whether the ROM was extracted from an archive. -->
+    <string name="info_extracted">æŠ½å‡ºæ¸ˆã¿</string>
+    <string name="info_save">ä¿å­˜</string>
+    <string name="info_renderer">ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼</string>
+    <string name="info_game_id">ã‚²ãƒ¼ãƒ ID</string>
+    <string name="info_ra_detection">å®Ÿç¸¾æ¤œå‡º</string>
+    <!-- IGM dialogs -->
+    <!-- %1$s = save slot name. -->
+    <string name="igm_delete_slot">%1$s ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <string name="press_button_prompt" tools:ignore="TypographyEllipsis">ä»»æ„ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„...</string>
+    <!-- Achievements -->
+    <!-- %1$d = unlocked count, %2$d = total. -->
+    <string name="ach_title">å®Ÿç¸¾ (%1$d/%2$d)</string>
+    <!-- Compact points label. %1$d = points. -->
+    <string name="ach_points_short">%1$dpts</string>
+    <!-- %1$d = points. -->
+    <string name="ach_points">%1$d ãƒã‚¤ãƒ³ãƒˆ</string>
+    <!-- %1$s = date the achievement was unlocked. -->
+    <string name="ach_unlocked_date">è§£æ”¾ã•ã‚ŒãŸ %1$s</string>
+    <string name="ach_unlocked">ãƒ­ãƒƒã‚¯è§£é™¤æ¸ˆã¿</string>
+    <string name="ach_locked">ãƒ­ãƒƒã‚¯ä¸­</string>
+    <string name="setting_portrait_margin">ãƒãƒ¼ãƒˆãƒ¬ãƒ¼ãƒˆã®ä½™ç™½ï¼ˆä½™ç™½ï¼‰</string>
+    <!-- Advanced setting: adjust the on-screen viewport rectangle. -->
+    <string name="setting_screen_geometry">ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¸ã‚ªãƒ¡ãƒˆãƒªãƒ¼</string>
+    <string name="setting_geo_width">Width</string>
+    <string name="setting_geo_height">é«˜ã•</string>
+    <string name="setting_geo_hpos">æ°´å¹³æ–¹å‘ã®ä½ç½®</string>
+    <string name="setting_geo_vpos">ç¸¦ã®ä½ç½®</string>
+    <!-- Emulator Mapping -->
+    <!-- Setting: maps each platform to an emulator/core. -->
+    <string name="setting_emulator_mapping">ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®ãƒžãƒƒãƒ”ãƒ³ã‚°</string>
+    <string name="label_reset">RESET</string>
+    <string name="label_show_all">ã™ã¹ã¦è¡¨ç¤º</string>
+    <string name="label_show_installed">ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ¸ˆã¿ã‚’è¡¨ç¤º</string>
+    <!-- The core is not bundled with the app. -->
+    <string name="value_not_bundled">ãƒãƒ³ãƒ‰ãƒ«ã—ã¦ã„ã¾ã›ã‚“</string>
+    <string name="value_no_overrides">ã‚²ãƒ¼ãƒ ã”ã¨ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</string>
+    <string name="value_no_firmware">ã“ã®ã‚³ã‚¢ã«ãƒ•ã‚¡ãƒ¼ãƒ ã‚¦ã‚§ã‚¢ã¯å¿…è¦ã‚ã‚Šã¾ã›ã‚“ã€‚</string>
+    <string name="mapping_action_bios">BIOS ãƒ•ã‚¡ã‚¤ãƒ«</string>
+    <string name="mapping_action_overrides">ã‚²ãƒ¼ãƒ æ¯Žã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰</string>
+    <string name="mapping_action_reset">æ—¢å®šã«ãƒªã‚»ãƒƒãƒˆ</string>
+    <!-- %d = number of required BIOS files missing. -->
+    <string name="mapping_required_missing">%d ã¯ä¸è¶³ã—ã¦ã„ã¾ã™</string>
+    <!-- Distinguishes platforms sharing a display name. %1$s = platform name, %2$s = platform tag. -->
+    <!-- Screen title. %s = platform name. -->
+    <string name="title_platform_mapping">%s ãƒžãƒƒãƒ”ãƒ³ã‚°</string>
+    <!-- Screen title. %s = platform name. -->
+    <string name="title_platform_bios">%s BIOS</string>
+    <string name="filter_all">ã™ã¹ã¦</string>
+    <string name="filter_missing">ä¸è¶³ã—ã¦ã„ã¾ã™</string>
+    <string name="filter_unmapped">ä¸è¶³ã—ã¦ã„ã¾ã™</string>
+    <string name="filter_mapped">ãƒžãƒƒãƒ”ãƒ³ã‚°</string>
+    <string name="value_unmapped">ãƒžãƒƒãƒ—ã•ã‚Œã¦ã„ã¾ã›ã‚“</string>
+    <string name="label_download">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰</string>
+    <!-- OSD toast. %1$s = core name. -->
+    <string name="osd_downloading_core">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­ %1$s</string>
+    <!-- OSD toast. %1$s = core name. -->
+    <string name="osd_core_downloaded">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰æ¸ˆã¿ %1$s</string>
+    <!-- OSD toast. %1$s = core name or error detail. -->
+    <string name="osd_core_download_failed">ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸ: %1$s</string>
+    <string name="osd_core_download_unknown_error">ä¸æ˜Žãªã‚¨ãƒ©ãƒ¼</string>
+    <string name="bios_required">å¿…é ˆ</string>
+    <string name="bios_optional">ã‚ªãƒ—ã‚·ãƒ§ãƒ³</string>
+    <string name="bios_present">ãƒ—ãƒ¬ã‚¼ãƒ³ãƒˆ</string>
+    <string name="bios_missing">è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“</string>
+    <!-- %d = number of games with per-game overrides. -->
+    <plurals name="override_game_count">
+        <item quantity="other">%d ã‚²ãƒ¼ãƒ </item>
+    </plurals>
+    <!-- %d = number of items selected. -->
+    <string name="bulk_selected">%d Selected</string>
+    <!-- %d = number of items. -->
+    <plurals name="bulk_delete_count">
+        <item quantity="other">%d ä»¶ã®ã‚¢ã‚¤ãƒ†ãƒ </item>
+    </plurals>
+    <!-- OSD toast. %d = number of cheats restored. -->
+    <plurals name="osd_cheats_restored">
+        <item quantity="other">%d ãƒãƒ¼ãƒˆãŒå¾©å…ƒã•ã‚Œã¾ã—ãŸ</item>
+    </plurals>
+    <string name="regenerate_system_folders_none">ã™ã¹ã¦ã®ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚©ãƒ«ãƒ€ãŒæ—¢ã«å­˜åœ¨ã—ã¾ã™</string>
+    <!-- %d = number of system folders created. -->
+    <plurals name="regenerate_system_folders_result">
+        <item quantity="other">%d ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œæˆã—ã¾ã—ãŸ</item>
+    </plurals>
+    <string name="value_no_cores_found">ã‚³ã‚¢ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“</string>
+    <string name="label_clear_override">æ¶ˆåŽ»</string>
+    <!-- %1$s = platform name. -->
+    <string name="dialog_reset_platform_confirm">%1$sã‚’ãƒªã‚»ãƒƒãƒˆã—ã¾ã™ã‹? ã“ã®ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã®ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ã®é¸æŠžã‚’è§£é™¤ã—ã€ãƒãƒ³ãƒ‰ãƒ«ã•ã‚ŒãŸãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚’å¾©å…ƒã—ã¾ã™ã€‚</string>
+    <!-- RA achievement preload. %1$s = game name. -->
+    <string name="ra_preload_progress">%1$s ã®ãƒ—ãƒªãƒ­ãƒ¼ãƒ‰ä¸­</string>
+    <string name="ra_preload_none">ã“ã®ã‚²ãƒ¼ãƒ ã®å®Ÿç¸¾ã¯è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ</string>
+    <string name="ra_preload_failed">ãƒ—ãƒªãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚æŽ¥ç¶šã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚</string>
+    <!-- %1$d = achievements cached, %2$d = points. -->
+    <plurals name="ra_preload_success">
+        <item quantity="other">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³å†ç”Ÿã®ãŸã‚ã«ã€ %1$d å®Ÿç¸¾ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã—ã¾ã—ãŸ (%2$d pts)</item>
+    </plurals>
+    <!-- %1$d = games cached, %2$d = total games. -->
+    <string name="ra_preload_bulk_done">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³ã§ãƒ—ãƒ¬ã‚¤ã™ã‚‹ãŸã‚ã® %1$d %2$d ã‚²ãƒ¼ãƒ ã® Anumber@@2 ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã—ã¾ã—ãŸ</string>
+    <string name="ra_offline_sets_title">ã‚ªãƒ•ãƒ©ã‚¤ãƒ³å®Ÿç¸¾ã‚»ãƒƒãƒˆ</string>
+    <string name="ra_offline_sets_empty">ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã•ã‚ŒãŸå®Ÿç¸¾ã‚»ãƒƒãƒˆã¯ã‚ã‚Šã¾ã›ã‚“</string>
+    <!-- %1$d = achievement count, %2$s = set name. -->
+    <string name="ra_offline_set_value">%1$d å®Ÿç¸¾ - %2$s</string>
+    <string name="label_refresh">æ›´æ–°</string>
+    <!-- Save Slots screen -->
+    <!-- Screen title. %1$s = game name. -->
+    <string name="save_slots_screen_title">%1$s ã‚¹ãƒ­ãƒƒãƒˆ</string>
+    <string name="save_slots_active">ã‚¢ã‚¯ãƒ†ã‚£ãƒ–</string>
+    <string name="save_slots_create">New Slot</string>
+    <string name="save_slots_rename">åå‰ã®å¤‰æ›´</string>
+    <string name="save_slots_delete">å‰Šé™¤</string>
+    <string name="save_slots_switch">ã‚¹ã‚¤ãƒƒãƒ</string>
+    <!-- %1$s = slot name. -->
+    <string name="save_slots_delete_confirm">ã‚¹ãƒ­ãƒƒãƒˆ \"%1$s\" ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ</string>
+    <!-- Conflicts resolution screen -->
+    <string name="conflicts_title">ç«¶åˆã‚’åŒæœŸ</string>
+    <string name="conflicts_applying">ç«¶åˆã‚’é©ç”¨ã—ã¦ã„ã¾ã™...</string>
+    <!-- %1$d = number of saves that could not be applied. -->
+    <plurals name="conflicts_apply_failed">
+        <item quantity="other">%1$d ã‚»ãƒ¼ãƒ–ã‚’é©ç”¨ã§ãã¾ã›ã‚“ã§ã—ãŸ</item>
+    </plurals>
+    <!-- %1$d = number of sync conflicts. -->
+    <plurals name="quick_menu_conflicts">
+        <item quantity="other">ç«¶åˆã‚’åŒæœŸ (%1$d)</item>
+    </plurals>
+    <string name="sync_errors_title">åŒæœŸã‚¨ãƒ©ãƒ¼</string>
+    <string name="sync_errors_empty">åŒæœŸã‚¨ãƒ©ãƒ¼ã¯ã‚ã‚Šã¾ã›ã‚“</string>
+    <!-- %1$d = number of sync errors. -->
+    <plurals name="quick_menu_sync_errors">
+        <item quantity="other">åŒæœŸã‚¨ãƒ©ãƒ¼ (%1$d)</item>
+    </plurals>
+    <string name="save_backup_restore">ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‹ã‚‰å¾©å…ƒ</string>
+    <string name="save_backup_games_title">ä¿å­˜ã‚’å¾©å…ƒ</string>
+    <string name="save_backup_list_title">ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—</string>
+    <string name="save_backup_none">ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãŒã‚ã‚Šã¾ã›ã‚“</string>
+    <string name="save_backup_restore_confirm">ã“ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’å¾©å…ƒã—ã¾ã™ã‹ï¼Ÿ\nç¾åœ¨ã®ä¿å­˜ãŒæœ€åˆã«ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã•ã‚Œã¦ã‹ã‚‰ã€ç¾åœ¨ã®RomMã®ä¿å­˜ã«ãªã‚Šã¾ã™ã€‚</string>
+    <string name="save_backup_restore_done">ä¿å­˜ã‚’å¾©å…ƒã—ã¾ã—ãŸ</string>
+    <string name="save_backup_restore_synced">ä¿å­˜ã‚’å¾©å…ƒã—ã€ç¾åœ¨ã®ã‚‚ã®ã¨ã—ã¦è¨­å®š</string>
+    <string name="save_backup_restore_pending">å¾©å…ƒã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã—ã€ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ã®ã¨ãã«åŒæœŸã—ã¾ã™</string>
+    <string name="save_backup_restore_conflict">å¾©å…ƒã•ã‚ŒãŸä¿å­˜ã—ã€åŒæœŸã®ç«¶åˆã‚’è§£æ±ºã—ã¾ã™</string>
+    <string name="save_backup_restore_failed">å¾©å…ƒã«å¤±æ•—ã—ã¾ã—ãŸ</string>
+    <!-- %1$d = number of backups. -->
+    <plurals name="save_backup_count">
+        <item quantity="other">%1$d ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—</item>
+    </plurals>
+    <string name="conflict_keep_local">ãƒ­ãƒ¼ã‚«ãƒ«ã‚’ä¿æŒ</string>
+    <string name="conflict_use_server">ã‚µãƒ¼ãƒãƒ¼ã‚’ä½¿ç”¨</string>
+    <string name="conflict_skip">ã‚¹ã‚­ãƒƒãƒ—</string>
+    <string name="conflict_yours">ã‚ãªãŸã®ã‚‚ã®</string>
+    <string name="conflict_server">ã‚µãƒ¼ãƒãƒ¼</string>
+    <!-- Label marking the older save in a conflict. -->
+    <string name="conflict_older">å¤ã„</string>
+    <!-- On-screen keyboard help overlay -->
+    <string name="kbd_help_title">ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«</string>
+    <string name="kbd_help_group_type">ã‚¿ã‚¤ãƒ—</string>
+    <string name="kbd_help_group_cursor">Cursor</string>
+    <string name="kbd_help_group_action">ã‚¢ã‚¯ã‚·ãƒ§ãƒ³</string>
+    <string name="kbd_help_move_selection">é¸æŠžã‚’ç§»å‹•</string>
+    <string name="kbd_help_press">ã‚¿ã‚¤ãƒ— ã‚­ãƒ¼</string>
+    <string name="kbd_help_backspace">ãƒãƒƒã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼</string>
+    <string name="kbd_help_space">ã‚¹ãƒšãƒ¼ã‚¹</string>
+    <string name="kbd_help_shift">SHIFT / CAPS (TAP)</string>
+    <string name="kbd_help_symbols">SYMBOLS (HOLD)</string>
+    <string name="kbd_help_cursor_move">å·¦ã«ç§»å‹•/å³</string>
+    <string name="kbd_help_cursor_jump">ã‚¸ãƒ£ãƒ³ãƒ—ã—ã¦é–‹å§‹ / çµ‚äº†</string>
+    <string name="kbd_help_submit">é€ä¿¡</string>
+    <string name="kbd_help_cancel">ã‚­ãƒ£ãƒ³ã‚»ãƒ«</string>
+</resources>

@@ -1,3 +1,27 @@
+==============================================================================
+Cannelloni — Fork Attribution, Ownership Notice & Licensing Terms
+==============================================================================
+
+This project is an open-source downstream fork of Cannoli (https://github.com/CannoliHQ/cannoli).
+
+Copyright (C) 2026 Brandon T. Kowalski and Cannoli Contributors (Original Codebase)
+Copyright (C) 2026 Denarmo and Cannelloni Contributors (Modifications & Additions)
+
+DECLARATION OF NON-OWNERSHIP:
+The maintainer/author of this fork (Denarmo) is NOT the original owner or author
+of the underlying Cannoli codebase. The original authors retain full copyright
+and credit over their respective original contributions.
+
+GRANT OF RIGHTS & USAGE PERMISSION:
+All modifications, bug fixes, enhancements, and new code written for Cannelloni
+are free and open-source software. You are welcome and explicitly permitted to
+use, study, modify, copy, adapt, incorporate, and redistribute any code from
+this project, subject to the terms and conditions of the GNU General Public
+License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+==============================================================================
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

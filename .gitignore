@@ -15,11 +15,11 @@ app/src/main/jniLibs/
 *.spv
 romm_cache.db
 
-# Populated by scripts/fetch-autoconfig.sh from the CannoliHQ fork of
+# Populated by scripts/fetch-autoconfig.sh from the CannelloniHQ fork of
 # libretro/retroarch-joypad-autoconfig. Not tracked in git.
 app/src/main/assets/autoconfig/
 
-# Built by CI from the CannoliHQ/kitchen repo. Not tracked in git.
+# Built by CI from the CannelloniHQ/kitchen repo. Not tracked in git.
 app/src/main/assets/kitchen/
 
 # Bytecode from the scripts/ test suite.

@@ -1,18 +1,46 @@
-# Contributing to Cannoli
+# Contributing to Cannelloni
 
-Thank you for even considering contributing to Cannoli!
+Thank you for considering contributing to Cannelloni!
 
+Cannelloni is an open-source project dedicated to delivering a clean, distraction-free retro gaming experience across Android devices. We welcome contributions that align with the project's vision of simplicity, performance, and reliability.
 
-## Pull Requests
+---
 
-I am not currently accepting pull requests. I hesitate to make PRs public because I hate saying no and this project requires someone to say no.
+## 📜 Legal & Anti-Piracy Compliance
 
-Cannoli builds on top of the giants in the scene so please fork and shape it into everything you want it to be. 
+Before contributing code, documentation, or issues, please review our [**LEGAL.md**](LEGAL.md).
 
-If you have an idea that you feel fits the vision of the project make an issue or stop by the Discord. I'd love to chat! 
+- **Strict No-ROMs / No-BIOS Policy:** Never submit pull requests, issues, or commit messages containing copyrighted game ROMs, BIOS images, proprietary keys, or links to pirated content. Any such submissions will be closed and removed immediately.
+- **Clean Code & Attribution:** Ensure any third-party code, shaders, or assets included have compatible open-source licenses (GPLv3, Apache 2.0, MIT, Zlib, etc.) and are properly attributed in [`credits.json`](credits.json).
 
-## Translations / i18n Efforts
+---
 
-A number of community members have expressed interest in translating Cannoli. This is facilitated through [Crowdin](https://crowdin.com/project/cannoli), so no coding is required.
+## 🛠️ How to Contribute
 
-See [TRANSLATING.md](TRANSLATING.md) for how to help.
+### 1. Translations & Localization
+Community translations are managed through Crowdin and localized XML resource files. See [**TRANSLATING.md**](TRANSLATING.md) for full instructions on how to contribute translations for your language without writing any code.
+
+### 2. Issues & Feature Discussions
+If you encounter a bug or have an idea that aligns with Cannelloni's minimal-fuss design philosophy:
+- Search existing issues to ensure it hasn't already been reported.
+- Open a detailed issue describing your Android device model, Android OS version, controller type, and steps to reproduce.
+
+### 3. Pull Requests
+Cannelloni maintains a focused, opinionated feature set to avoid frontend bloat. If you plan to work on a major architectural change or new feature, please open an issue first to discuss the design.
+
+To submit a pull request:
+1. Fork the repository and create your feature branch: `git checkout -b feature/my-new-feature`.
+2. Ensure your changes compile cleanly and adhere to existing Kotlin / C++ code formatting.
+3. If you update credits or third-party components, run `python scripts/sync_credits.py`.
+4. Open a Pull Request with a clear explanation of what changed and why.
+
+---
+
+## 💖 Upstream Community
+Cannelloni builds on the shoulders of giants in the emulation community, particularly [Cannoli](https://github.com/CannoliHQ/cannoli) and [MinUI](https://github.com/shauninman/MinUI). Please support their upstream projects as well!
+
+---
+
+## 💬 Contact
+
+- **Discord:** You can reach out directly on Discord: [`@denarmo`](https://discord.com).

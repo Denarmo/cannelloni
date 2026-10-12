@@ -18,13 +18,28 @@ fun gitCommitHash(): String = try {
 
 fun buildDate(): String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
 
+fun computeVersionCode(version: String): Int {
+    val base = version.substringBefore("-")
+    val parts = base.split(".").mapNotNull { it.toIntOrNull() }
+    val major = parts.getOrElse(0) { 1 }
+    val minor = parts.getOrElse(1) { 0 }
+    val patch = parts.getOrElse(2) { 0 }
+    val pre = if (version.contains("-")) {
+        val suffix = version.substringAfter("-")
+        suffix.filter { it.isDigit() }.toIntOrNull()?.coerceIn(1, 98) ?: 1
+    } else {
+        99
+    }
+    return major * 1000000 + minor * 10000 + patch * 100 + pre
+}
+
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties().apply {
     if (keystorePropertiesFile.exists()) load(keystorePropertiesFile.inputStream())
 }
 
 android {
-    namespace = "dev.cannoli.scorza"
+    namespace = "dev.cannelloni.scorza"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -32,11 +47,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.cannoli.scorza"
+        applicationId = "dev.cannelloni.scorza"
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
         versionName = "1.0.0"
+        versionCode = 1000099
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -67,8 +82,14 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
-            create("release") {
+        create("release") {
+            val repoKeystore = file("release.keystore")
+            if (repoKeystore.exists()) {
+                storeFile = repoKeystore
+                storePassword = "cannelloni"
+                keyAlias = "cannelloni"
+                keyPassword = "cannelloni"
+            } else if (keystorePropertiesFile.exists()) {
                 storeFile = file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
                 keyAlias = keystoreProperties["keyAlias"] as String
@@ -79,12 +100,12 @@ android {
 
     buildTypes {
         debug {
-            if (keystorePropertiesFile.exists()) {
+            if (file("release.keystore").exists() || keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
         release {
-            if (keystorePropertiesFile.exists()) {
+            if (file("release.keystore").exists() || keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
             isMinifyEnabled = false
@@ -120,8 +141,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":cannoli-igm"))
-    implementation(project(":cannoli-core"))
+    implementation(project(":cannelloni-igm"))
+    implementation(project(":cannelloni-core"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)

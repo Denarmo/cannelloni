@@ -1,0 +1,79 @@
+package dev.cannelloni.scorza.ui.screens
+
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import dev.cannelloni.scorza.romm.RommCollection
+import dev.cannelloni.ui.ButtonStyle
+import dev.cannelloni.ui.R
+import dev.cannelloni.ui.components.BottomBar
+import dev.cannelloni.ui.components.List
+import dev.cannelloni.ui.components.PillRowKeyValue
+import dev.cannelloni.ui.components.ScreenBackground
+import dev.cannelloni.ui.components.ScreenTitle
+import dev.cannelloni.ui.components.footerReservation
+import dev.cannelloni.ui.components.listTitleSpacing
+import dev.cannelloni.ui.components.pillItemHeight
+import dev.cannelloni.ui.components.screenInsets
+
+@Composable
+fun RommCollectionListScreen(
+    title: String,
+    collections: List<RommCollection>,
+    selectedIndex: Int,
+    scrollTarget: Int,
+    backgroundImagePath: String?,
+    backgroundTint: Int,
+    listFontSize: TextUnit = 22.sp,
+    listLineHeight: TextUnit = 32.sp,
+    listVerticalPadding: Dp = 6.dp,
+    onListStateChanged: ((LazyListState?) -> Unit)? = null,
+    buttonStyle: ButtonStyle = ButtonStyle(),
+) {
+    val itemHeight = pillItemHeight(listLineHeight, listVerticalPadding)
+    ScreenBackground(backgroundImagePath = backgroundImagePath, backgroundTint = backgroundTint) {
+        Box(modifier = Modifier.fillMaxSize().padding(screenInsets())) {
+            Column(modifier = Modifier.fillMaxSize().padding(bottom = footerReservation())) {
+                ScreenTitle(
+                    text = title,
+                    fontSize = listFontSize,
+                    lineHeight = listLineHeight,
+                )
+                Spacer(modifier = Modifier.height(listTitleSpacing()))
+                List(
+                    items = collections,
+                    selectedIndex = selectedIndex.coerceIn(0, (collections.size - 1).coerceAtLeast(0)),
+                    itemHeight = itemHeight,
+                    scrollTarget = scrollTarget,
+                    onListStateChanged = onListStateChanged,
+                ) { _, collection, isSelected ->
+                    PillRowKeyValue(
+                        label = collection.name,
+                        value = collection.romCount.toString(),
+                        isSelected = isSelected,
+                        fontSize = listFontSize,
+                        lineHeight = listLineHeight,
+                        verticalPadding = listVerticalPadding,
+                    )
+                }
+            }
+            BottomBar(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                leftItems = listOf(buttonStyle.back to stringResource(R.string.label_back)),
+                rightItems = listOf(buttonStyle.confirm to stringResource(R.string.label_select)),
+            )
+        }
+    }
+}

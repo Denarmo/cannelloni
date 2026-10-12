@@ -66,9 +66,9 @@ jobs:
           VERSION_CODE=$(( ${MAJOR:-0} * 1000000 + ${MINOR:-0} * 10000 + ${PATCH:-0} * 100 + PRE ))
 
           APK=$(gh release view "$TAG" --json assets \
-            -q '.assets[] | select(.name | startswith("cannoli-") and endswith(".apk")) | .name')
+            -q '.assets[] | select(.name | startswith("cannelloni-") and endswith(".apk")) | .name')
           if [[ -z "$APK" ]]; then
-            echo "::error::No cannoli-*.apk asset found in release $TAG"
+            echo "::error::No cannelloni-*.apk asset found in release $TAG"
             exit 1
           fi
 
@@ -84,7 +84,7 @@ jobs:
         run: |
           mkdir -p _site
 
-          curl -sf "https://update.cannoli.dev/versions.json" -o _site/versions.json 2>/dev/null || echo '{}' > _site/versions.json
+          curl -sf "https://update.cannelloni.dev/versions.json" -o _site/versions.json 2>/dev/null || echo '{}' > _site/versions.json
 
           jq --arg ch "${{ steps.info.outputs.channel }}" \
              --arg vn "${{ steps.info.outputs.version }}" \

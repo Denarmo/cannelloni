@@ -1,5 +1,5 @@
 #!/bin/sh
-# Fetch the RetroArch joypad autoconfig library from the CannoliHQ fork
+# Fetch the RetroArch joypad autoconfig library from the CannelloniHQ fork
 # into app/src/main/assets/autoconfig/android/.
 #
 # Run before building if the assets dir is empty or you want to refresh
@@ -8,7 +8,7 @@
 
 set -e
 
-FORK_URL="https://github.com/CannoliHQ/retroarch-joypad-autoconfig.git"
+FORK_URL="https://github.com/libretro/retroarch-joypad-autoconfig.git"
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 ASSETS_DIR="$REPO_ROOT/app/src/main/assets/autoconfig/android"

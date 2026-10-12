@@ -6,6 +6,7 @@ on:
       version:
         description: Version number (e.g. 1.0.0)
         required: true
+        default: "1.0.0"
       branch:
         description: Branch to build from
         required: true
@@ -13,17 +14,18 @@ on:
       message:
         description: Release notes
         required: true
+        default: "Cannelloni v1.0.0 - The Universal Retro Gaming Frontend"
       prerelease:
         description: Mark as pre-release
         type: boolean
-        default: true
+        default: false
 
 env:
   BUILDBOT: https://buildbot.libretro.com/nightly/android/latest
   CORES: >-
     fbneo gambatte genesis_plus_gx handy mame2003_plus mednafen_ngp
-    mednafen_pce_fast mednafen_vb mednafen_wswan mgba nestopia pcsx_rearmed
-    pokemini prosystem snes9x stella swanstation
+    mednafen_pce_fast mednafen_vb mednafen_wswan melonds mgba nestopia
+    pcsx_rearmed pokemini prosystem snes9x stella swanstation
 
 jobs:
   build:
@@ -45,9 +47,12 @@ jobs:
             for core in $CORES; do
               name="${core}_libretro_android.so"
               echo "Downloading ${arch}/${name}"
-              curl -sL "${BUILDBOT}/${arch}/${name}.zip" -o /tmp/core.zip
-              unzip -o -q /tmp/core.zip -d "$dir"
-              rm /tmp/core.zip
+              if curl -sfL "${BUILDBOT}/${arch}/${name}.zip" -o /tmp/core.zip; then
+                unzip -o -q /tmp/core.zip -d "$dir" || true
+                rm -f /tmp/core.zip
+              else
+                echo "Warning: failed to download ${name}"
+              fi
             done
           done
 
@@ -76,8 +81,16 @@ jobs:
       - name: Fetch RetroArch autoconfig cfgs
         run: ./scripts/fetch-autoconfig.sh
 
-      - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
+      - name: Setup keystore
+        run: |
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release.keystore
+          elif [ -f "app/release.keystore" ]; then
+            echo "Using permanent release keystore from repository"
+          else
+            echo "Generating release signing keystore..."
+            keytool -genkey -v -keystore app/release.keystore -alias cannelloni -keyalg RSA -keysize 2048 -validity 10000 -storepass cannelloni -keypass cannelloni -dname "CN=Cannelloni, OU=Release, O=Cannelloni, L=Unknown, S=Unknown, C=US"
+          fi
 
       - name: Compute version code and patch build.gradle.kts
         run: |
@@ -93,7 +106,7 @@ jobs:
             PRE=99
           fi
           VERSION_CODE=$(( ${MAJOR:-0} * 1000000 + ${MINOR:-0} * 10000 + ${PATCH:-0} * 100 + PRE ))
-          sed -i "s/versionCode = [0-9]*/versionCode = $VERSION_CODE/" app/build.gradle.kts
+          sed -i "s/versionCode = .*/versionCode = $VERSION_CODE/" app/build.gradle.kts
           sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ inputs.version }}\"/" app/build.gradle.kts
           echo "versionCode=$VERSION_CODE, versionName=${{ inputs.version }}"
 
@@ -101,30 +114,37 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=${{ github.workspace }}/app/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            ./gradlew assembleRelease \
+              -Pandroid.injected.signing.store.file=${{ github.workspace }}/app/release.keystore \
+              -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+              -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+              -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+          else
+            ./gradlew assembleRelease \
+              -Pandroid.injected.signing.store.file=${{ github.workspace }}/app/release.keystore \
+              -Pandroid.injected.signing.store.password=cannelloni \
+              -Pandroid.injected.signing.key.alias=cannelloni \
+              -Pandroid.injected.signing.key.password=cannelloni
+          fi
 
       - name: Get version info
         id: version
         run: |
           SHORT_SHA=$(git rev-parse --short HEAD)
           echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
-          echo "apk_name=cannoli-${{ inputs.version }}-${SHORT_SHA}.apk" >> "$GITHUB_OUTPUT"
+          echo "apk_name=cannelloni-${{ inputs.version }}-${SHORT_SHA}.apk" >> "$GITHUB_OUTPUT"
 
       - name: Rename APK
         run: |
           mv app/build/outputs/apk/release/app-release.apk \
              app/build/outputs/apk/release/${{ steps.version.outputs.apk_name }}
 
-      - name: Create release
+      - name: Upload APK to Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.tag }}
+          name: Cannelloni ${{ steps.version.outputs.tag }}
           body: ${{ inputs.message }}
-          prerelease: ${{ inputs.prerelease }}
-          target_commitish: ${{ inputs.branch }}
+          generate_release_notes: true
           files: app/build/outputs/apk/release/${{ steps.version.outputs.apk_name }}

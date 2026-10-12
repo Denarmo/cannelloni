@@ -115,14 +115,14 @@ static void ra_server_call(const rc_api_request_t *request,
     (void)client;
 
     /* Intercept game data fetch when we have a game ID override — replace fake hash with game ID */
-    if (g_pending_game_id && request->post_data && strstr(request->post_data, "CANNOLI_")) {
+    if (g_pending_game_id && request->post_data && strstr(request->post_data, "CANNELLONI_")) {
         LOGI("Intercepting request, replacing hash with game ID %u", g_pending_game_id);
-        /* Rebuild post data: replace m=CANNOLI_xxx with g=GAMEID */
+        /* Rebuild post data: replace m=CANNELLONI_xxx with g=GAMEID */
         char new_post[512];
         const char *p = request->post_data;
         size_t pos = 0;
         while (*p) {
-            if (strncmp(p, "m=CANNOLI_", 10) == 0) {
+            if (strncmp(p, "m=CANNELLONI_", 10) == 0) {
                 pos += snprintf(new_post + pos, sizeof(new_post) - pos, "g=%u", g_pending_game_id);
                 p += 10;
                 while (*p && *p != '&') p++;
@@ -249,7 +249,7 @@ static void ra_log(const char *message, const rc_client_t *client) {
 /* ---- JNI functions ---- */
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeInit(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeInit(JNIEnv *env, jobject thiz) {
     (*env)->GetJavaVM(env, &g_jvm);
 
     // Full reset of all module state so each init starts from a clean slate,
@@ -343,7 +343,7 @@ static void ra_drain_response_queue(void) {
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeDestroy(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeDestroy(JNIEnv *env, jobject thiz) {
     (void)thiz;
     ra_log_to_kotlin("destroy: frames=%ld memInit=%d", g_frame_count, g_memory_initialized);
     ra_drain_response_queue();
@@ -391,7 +391,7 @@ static void ra_login_callback(int result, const char *error_message, rc_client_t
             if (g_pending_game_id) {
                 LOGI("Loading game by ID: %u (console %u)", g_pending_game_id, g_pending_console_id);
                 char hash[33];
-                snprintf(hash, sizeof(hash), "CANNOLI_%010u", g_pending_game_id);
+                snprintf(hash, sizeof(hash), "CANNELLONI_%010u", g_pending_game_id);
                 /* Register a fake hash→gameID mapping so rc_client can load by "hash" */
                 rc_client_begin_load_game(g_client, hash, ra_load_game_callback, NULL);
                 g_pending_game_id = 0;
@@ -414,7 +414,7 @@ static void ra_login_callback(int result, const char *error_message, rc_client_t
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoginWithToken(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeLoginWithToken(JNIEnv *env, jobject thiz,
         jstring username, jstring token) {
     (void)thiz;
     if (!g_client) return;
@@ -431,7 +431,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoginWithToken(J
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoginWithPassword(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeLoginWithPassword(JNIEnv *env, jobject thiz,
         jstring username, jstring password) {
     (void)thiz;
     if (!g_client) return;
@@ -460,7 +460,7 @@ static void ra_load_game_callback(int result, const char *error_message, rc_clie
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoadGame(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeLoadGame(JNIEnv *env, jobject thiz,
         jstring romPath, jint consoleId) {
     (void)thiz;
     if (!g_client) return;
@@ -473,7 +473,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoadGame(JNIEnv 
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoadGameById(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeLoadGameById(JNIEnv *env, jobject thiz,
         jint gameId, jint consoleId) {
     (void)env; (void)thiz;
     if (!g_client) return;
@@ -484,7 +484,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeLoadGameById(JNI
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeUnloadGame(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeUnloadGame(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     ra_drain_response_queue();
     if (g_memory_initialized) {
@@ -586,13 +586,13 @@ void ra_process_frame(void) {
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeDoFrame(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeDoFrame(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     ra_process_frame();
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeIdle(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeIdle(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     if (!g_client) return;
     ra_drain_response_queue();
@@ -600,7 +600,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeIdle(JNIEnv *env
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeReset(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeReset(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     ra_drain_response_queue();
     ra_log_to_kotlin("reset: frames=%ld", g_frame_count);
@@ -618,7 +618,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeReset(JNIEnv *en
 }
 
 JNIEXPORT jboolean JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeIsLoggedIn(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeIsLoggedIn(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     if (!g_client) return JNI_FALSE;
     const rc_client_user_t *user = rc_client_get_user_info(g_client);
@@ -626,7 +626,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeIsLoggedIn(JNIEn
 }
 
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetUsername(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetUsername(JNIEnv *env, jobject thiz) {
     (void)thiz;
     char name[256];
     name[0] = '\0';
@@ -641,7 +641,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetUsername(JNIE
 }
 
 JNIEXPORT jint JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameId(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetGameId(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     if (!g_client || !rc_client_is_game_loaded(g_client)) return 0;
     const rc_client_game_t *game = rc_client_get_game_info(g_client);
@@ -649,7 +649,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameId(JNIEnv
 }
 
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameTitle(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetGameTitle(JNIEnv *env, jobject thiz) {
     (void)thiz;
     char title[256];
     title[0] = '\0';
@@ -664,13 +664,13 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameTitle(JNI
 }
 
 JNIEXPORT jboolean JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeIsMemoryInitialized(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeIsMemoryInitialized(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     return g_memory_initialized ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameHash(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetGameHash(JNIEnv *env, jobject thiz) {
     (void)thiz;
     char hash[33];
     hash[0] = '\0';
@@ -685,7 +685,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetGameHash(JNIE
 }
 
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_ra_RaHasher_nativeHashRom(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_ra_RaHasher_nativeHashRom(JNIEnv *env, jobject thiz,
         jstring path, jint consoleId) {
     (void)thiz;
     char hash[33];
@@ -705,7 +705,7 @@ Java_dev_cannoli_scorza_ra_RaHasher_nativeHashRom(JNIEnv *env, jobject thiz,
 }
 
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetUserAgentClause(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetUserAgentClause(JNIEnv *env, jobject thiz) {
     (void)thiz;
     char buf[128];
     buf[0] = '\0';
@@ -718,7 +718,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetUserAgentClau
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeHttpResponse(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeHttpResponse(JNIEnv *env, jobject thiz,
         jlong requestPtr, jstring body, jint httpStatus) {
     (void)thiz;
     PendingResponse *pr = (PendingResponse *)(uintptr_t)requestPtr;
@@ -750,7 +750,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeHttpResponse(JNI
 
 /* Returns pipe-delimited flat string: id|title|description|points|unlocked|state|unlockTime\n per achievement */
 JNIEXPORT jstring JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeGetAchievementData(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeGetAchievementData(JNIEnv *env, jobject thiz) {
     (void)thiz;
     if (!g_client || !rc_client_is_game_loaded(g_client)) {
         return (*env)->NewStringUTF(env, "");
@@ -826,7 +826,7 @@ static void ra_award_response(const rc_api_server_response_t *response, void *us
 }
 
 JNIEXPORT jbyteArray JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeSerializeProgress(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeSerializeProgress(JNIEnv *env, jobject thiz) {
     (void)thiz;
     if (!g_client || !rc_client_is_game_loaded(g_client)) return NULL;
 
@@ -856,7 +856,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeSerializeProgres
 }
 
 JNIEXPORT jboolean JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeDeserializeProgress(JNIEnv *env, jobject thiz,
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeDeserializeProgress(JNIEnv *env, jobject thiz,
         jbyteArray data) {
     (void)thiz;
     if (!g_client || !rc_client_is_game_loaded(g_client) || !data) return JNI_FALSE;
@@ -898,7 +898,7 @@ static void ra_do_manual_unlock(int achievement_id, const char *game_hash) {
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeQueueUnlock(JNIEnv *env, jobject thiz, jint achievementId, jstring gameHash) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeQueueUnlock(JNIEnv *env, jobject thiz, jint achievementId, jstring gameHash) {
     (void)thiz;
     const char *hash = gameHash ? (*env)->GetStringUTFChars(env, gameHash, NULL) : NULL;
     pthread_mutex_lock(&g_queue_mutex);
@@ -918,7 +918,7 @@ Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeQueueUnlock(JNIE
 }
 
 JNIEXPORT void JNICALL
-Java_dev_cannoli_scorza_libretro_RetroAchievementsManager_nativeSetPendingReset(JNIEnv *env, jobject thiz) {
+Java_dev_cannelloni_scorza_libretro_RetroAchievementsManager_nativeSetPendingReset(JNIEnv *env, jobject thiz) {
     (void)env; (void)thiz;
     g_pending_reset = 1;
     ra_log_to_kotlin("pending reset: flagged");
