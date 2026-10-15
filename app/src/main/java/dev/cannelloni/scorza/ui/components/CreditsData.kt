@@ -11,6 +11,7 @@ val CREDITS_INSPIRATION: List<CreditEntry> = listOf(
     CreditEntry("Shaun Inman", "MinUI"),
     CreditEntry("Libretro / RetroArch", "Libretro API & emulator core ecosystem"),
     CreditEntry("melonDS Team & Arisotura", "melonDS Nintendo DS emulation"),
+    CreditEntry("PPSSPP Team & Henrik Rydgård", "PPSSPP PSP emulation"),
     CreditEntry("Baba", "A great friend that keeps believing in me"),
     CreditEntry("Abraham McCampbell", "Original logo design inspiration"),
 )
@@ -30,6 +31,7 @@ val CREDITS_CORES: List<CreditEntry> = listOf(
     CreditEntry("Nestopia", "GPLv2"),
     CreditEntry("PCSX ReARMed", "GPLv2"),
     CreditEntry("PokeMini", "GPLv3"),
+    CreditEntry("PPSSPP", "GPLv2+"),
     CreditEntry("ProSystem", "GPLv2"),
     CreditEntry("Snes9x", "Non-commercial"),
     CreditEntry("Stella", "GPLv2"),

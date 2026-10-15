@@ -5,6 +5,8 @@ vars:
   CORES_DIR: app/src/main/jniLibs
   KITCHEN_SRC: ../cannelloni-kitchen
   KITCHEN_DEST: app/src/main/assets/kitchen
+  PPSSPP_ASSETS_URL: https://buildbot.libretro.com/assets/system/PPSSPP.zip
+  PPSSPP_ASSETS_DEST: app/src/main/assets/ppsspp
 
 tasks:
   cores:
@@ -25,6 +27,7 @@ tasks:
         - nestopia
         - pcsx_rearmed
         - pokemini
+        - ppsspp
         - prosystem
         - snes9x
         - stella
@@ -47,11 +50,26 @@ tasks:
               rm "/tmp/${zip}" || \
               echo "FAIL ${arch}/{{.ITEM}}"
           done
+      - task: ppsspp:assets
 
   cores:clean:
     desc: Remove all downloaded cores
     cmds:
       - rm -rf {{.CORES_DIR}}
+      - rm -rf {{.PPSSPP_ASSETS_DEST}}
+
+  ppsspp:assets:
+    desc: Fetch the PPSSPP core's system assets (bundled into the APK, installed to system/PSP/PPSSPP)
+    status:
+      - test -f {{.PPSSPP_ASSETS_DEST}}/PPSSPP.zip
+    cmds:
+      - mkdir -p {{.PPSSPP_ASSETS_DEST}}
+      - |
+        echo "FETCH PPSSPP.zip"
+        curl -sfL "{{.PPSSPP_ASSETS_URL}}" -o /tmp/PPSSPP.zip && \
+          unzip -tq /tmp/PPSSPP.zip && \
+          mv /tmp/PPSSPP.zip "{{.PPSSPP_ASSETS_DEST}}/PPSSPP.zip" || \
+          { rm -f /tmp/PPSSPP.zip; echo "FAIL PPSSPP.zip"; }
 
   credits:sync:
     desc: Sync credits.json to CreditsData.kt, taskfile.yml, and release.yml

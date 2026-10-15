@@ -157,6 +157,7 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
     private var slotOccupied by mutableStateOf(emptyList<Boolean>())
     private var cleaned = false
     private var autoSavedOnStop = false
+    @Volatile private var pendingHwResumeSlot: Slot? = null
 
     private var scalingMode by mutableStateOf(ScalingMode.CORE_REPORTED)
     private var screenEffect by mutableStateOf(ScreenEffect.NONE)
@@ -430,9 +431,14 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
 
         private val FF_SPEEDS = listOf(2, 3, 4, 6, 8)
 
+        private const val PPSSPP_BACKEND_KEY = "ppsspp_backend"
+
+        // Options pinned by the runner whose other values cannot work here.
+        private val HIDDEN_CORE_OPTION_KEYS = setOf(PPSSPP_BACKEND_KEY)
+
         // Substrings (lowercase) matched against "<key> <desc>" for cores declaring hw_render=true.
-        // These options only take effect with a hardware GL/Vulkan context, which the built-in
-        // runner does not provide, so we hide them rather than let users toggle no-ops.
+        // These options only take effect with a hardware GL/Vulkan context, so they are hidden
+        // when the core did not get one rather than letting users toggle no-ops.
         private val HW_RENDER_GATED_PATTERNS = listOf(
             "resolution",
             "internal_res",
@@ -756,6 +762,12 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
         val resumeSlot = args.resumeSlot
         val activity = this
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            if (PpssppAssets.isPpssppCore(corePath)) {
+                // PPSSPP reads its fonts, UI atlas and compat database from <system>/PPSSPP and
+                // renders text-less or refuses some games without them.
+                val present = PpssppAssets.ensureInstalled(activity, File(systemDir))
+                sessionLog.log("PPSSPP system assets present=$present")
+            }
             sessionLog.log("loadCore: $corePath")
             if (!runner.loadCore(corePath)) {
                 sessionLog.logError("loadCore FAILED for $corePath")
@@ -781,6 +793,11 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
             }
             if (!loadedOpts.containsKey("melonds_touch_mode") && coreBaseName.contains("melonds", ignoreCase = true)) {
                 runner.setCoreOption("melonds_touch_mode", "Touch")
+            }
+            if (PpssppAssets.isPpssppCore(corePath)) {
+                // The built-in runner only offers an OpenGL ES context. Auto would ask for the
+                // frontend's preferred driver first, so pin it and keep it out of the menu.
+                runner.setCoreOption(PPSSPP_BACKEND_KEY, "opengl")
             }
             val romFile = File(romPath)
             sessionLog.log("ROM validation: exists=${romFile.exists()} readable=${romFile.canRead()} size=${romFile.length()} ext=${romFile.extension}")
@@ -809,7 +826,10 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
             if (resumeSlot >= 0) {
                 val slot = slotManager.slots.getOrNull(resumeSlot)
                 if (slot != null && slotManager.stateExists(slot)) {
-                    slotManager.loadState(runner, slot)
+                    // A hardware-rendered core has no GL context until the renderer resets it on
+                    // the GL thread, and a state loaded before that is lost, so defer it until then.
+                    if (runner.isHwRender()) pendingHwResumeSlot = slot
+                    else slotManager.loadState(runner, slot)
                     withContext(kotlinx.coroutines.Dispatchers.Main) { selectedSlotIndex = resumeSlot }
                 }
             }
@@ -860,6 +880,13 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
                     ShaderPipeline.logger = { msg -> sessionLog.log(msg) }
                 }
                 configureBackend(glesBackend)
+                glesBackend.onHwContextReady = {
+                    pendingHwResumeSlot?.let { slot ->
+                        pendingHwResumeSlot = null
+                        val ok = slotManager.loadState(runner, slot)
+                        sessionLog.log("hw resume state load: slot=${slot.label} ok=$ok")
+                    }
+                }
                 var startupCountdown = 10
                 // HACK: FBNeo has a bug where vertical arcade games initialize with wrong
                 // framebuffer orientation despite reporting correct rotation. Toggling the
@@ -887,10 +914,15 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
 
                 val eglLog: (String) -> Unit = { msg -> if (dev.cannelloni.scorza.util.LoggingPrefs.session) sessionLog.log(msg) }
                 val glVersion = if (es3Supported) 3 else 2
+                val hwRender = runner.isHwRender()
+                if (hwRender) sessionLog.log("core negotiated a hardware GL context")
                 glSurfaceView = GLSurfaceView(activity).apply {
                     setEGLContextClientVersion(glVersion)
                     setEGLConfigChooser(LoggingEglConfigChooser(glVersion, eglLog))
                     setEGLContextFactory(LoggingEglContextFactory(glVersion, eglLog))
+                    // A hardware core keeps textures, programs and its emulated framebuffers in
+                    // this context; dropping it on every pause would force a full core reset.
+                    if (hwRender) preserveEGLContextOnPause = true
                     setRenderer(glesBackend)
                     renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
                     addOnAttachStateChangeListener(object : android.view.View.OnAttachStateChangeListener {
@@ -927,6 +959,13 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
                     })
                 }
                 gameView = glSurfaceView
+                if (hwRender) {
+                    // Save states, thumbnails, reset and teardown of a hardware core must run on
+                    // the thread that owns its GL context, wherever the menu or lifecycle calls them.
+                    // Returning false once the view is gone lets unload and deinit run directly
+                    // instead of waiting out the runner's timeout on a GL thread that has exited.
+                    runner.glDispatcher = GlDispatcher { r -> glSurfaceView?.let { it.queueEvent(r); true } ?: false }
+                }
                 startVsyncPacer()
                 sessionLog.log("renderer initialized: ${renderer.backendName}")
 
@@ -2478,8 +2517,10 @@ class LibretroActivity : ComponentActivity(), LauncherSettingsHost {
     // --- Emulator ---
 
     private fun loadVisibleCoreOptions(): List<LibretroRunner.CoreOption> {
-        val all = runner.getCoreOptions()
-        if (!coreRequiresHwRender) return all
+        val all = runner.getCoreOptions().filterNot { it.key in HIDDEN_CORE_OPTION_KEYS }
+        // A core that negotiated a GL context honours its GPU options, so only hide them when
+        // it declares hw_render but fell back to software output.
+        if (!coreRequiresHwRender || runner.isHwRender()) return all
         return all.filterNot { isHwRenderGatedOption(it) }
     }
 

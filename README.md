@@ -48,8 +48,9 @@ Cannelloni began as a fork of [Cannoli](https://github.com/CannoliHQ/cannoli), a
 - **Couch Multiplayer:** Multi-gamepad assignment for local multiplayer gaming on Android TV and docked handhelds.
 
 ### ⚡ Dual-Engine Hybrid Emulation
-- **17+ Native Libretro Cores:** Built-in, battle-tested cores compiled directly into Cannelloni for instant zero-configuration playback, seamless suspend/resume, and unified audio/video rendering.
+- **19 Native Libretro Cores:** Built-in, battle-tested cores compiled directly into Cannelloni for instant zero-configuration playback, seamless suspend/resume, and unified audio/video rendering.
 - **Built-in Nintendo DS (melonDS) Core Integration:** Zero-configuration Nintendo DS emulation directly connected to Cannelloni's In-Game Menu (IGM). Features full touchscreen support, customizable shortcut button to swap screens on the fly, unified save states, and custom display shaders.
+- **Built-in PSP (PPSSPP) Core Integration:** Zero-configuration PlayStation Portable emulation directly connected to Cannelloni's In-Game Menu (IGM). PPSSPP's system assets (fonts, UI atlas, language files) ship inside the APK and install themselves on first launch, with unified save states and emulation settings such as internal resolution available from the IGM.
 - **Standalone Emulator Integration:** Deep-linking and activity launching for demanding systems (RetroArch, Dolphin, NetherSX2/AetherSX2, PPSSPP, DuckStation, Citra, Redream, etc.).
 
 ### 💾 Cloud Sync & Game Management
@@ -95,9 +96,10 @@ Cannelloni includes built-in native Libretro cores for immediate playback:
 | **WonderSwan / Color** | `WS` / `WSC` | Mednafen WonderSwan | GPLv2 |
 | **Virtual Boy** | `VB` | Mednafen VB | GPLv2 |
 | **Nintendo DS (NDS)** | `NDS` | melonDS | GPLv3 |
+| **Sony PSP** | `PSP` | PPSSPP | GPLv2+ |
 | **Pokémon Mini** | `PKMN` | PokeMini | GPLv3 |
 
-*Standalone emulator launchers are also available for Nintendo 64 (M64Plus FZ), Nintendo GameCube / Wii (Dolphin), PlayStation 2 (NetherSX2), and Sony PSP (PPSSPP).*
+*Standalone emulator launchers are also available for Nintendo 64 (M64Plus FZ), Nintendo GameCube / Wii (Dolphin), and PlayStation 2 (NetherSX2). The PPSSPP standalone app remains available as an alternative launcher for PSP.*
 
 ---
 
@@ -117,6 +119,7 @@ Place your retro gaming collection on your internal storage or SD card under a f
 │   ├── GBA/                (Game Boy Advance games)
 │   ├── NDS/                (Nintendo DS .nds / .dsi games)
 │   ├── PS/                 (PlayStation .chd / .cue / .m3u)
+│   ├── PSP/                (PSP .iso / .cso / .chd / .pbp)
 │   └── ...
 ├── Saves/                  (In-game battery saves)
 └── States/                 (Instant save state snapshots)
@@ -156,7 +159,7 @@ Cannelloni is built upon the collective work of incredible developers and artist
 - **[Cannoli](https://github.com/CannoliHQ/cannoli)**: The original Android MinUI frontend developed by the Cannoli team, providing the rock-solid foundation for this project.
 - **[Shaun Inman](https://github.com/shauninman)**: Creator of [MinUI](https://github.com/shauninman/MinUI), whose vision of distraction-free, minimalist handheld gaming inspired this entire journey.
 - **[Libretro / RetroArch](https://www.libretro.com)**: For the extraordinary cross-platform Libretro API and the vibrant emulator core ecosystem.
-- **Emulation Core Teams**: The dedicated developers of melonDS (melonDS Team & Arisotura), PCSX ReARMed, SwanStation, Snes9x, Nestopia, Gambatte, mGBA, Genesis Plus GX, FBNeo, MAME 2003-Plus, Mednafen, Stella, ProSystem, Handy, and PokeMini.
+- **Emulation Core Teams**: The dedicated developers of melonDS (melonDS Team & Arisotura), PPSSPP (PPSSPP Team & Henrik Rydgård), PCSX ReARMed, SwanStation, Snes9x, Nestopia, Gambatte, mGBA, Genesis Plus GX, FBNeo, MAME 2003-Plus, Mednafen, Stella, ProSystem, Handy, and PokeMini.
 - **Shader Authors**: EasyMode, cgwg, Themaister, Timothy Lottes, hunterk, Gigaherz, rsn8887, and SoltanGris42.
 - **Font Designers**: M+ Fonts Project, BPreplay, and Nerd Fonts.
 - **Libraries**: Apache Commons Compress, PdfiumAndroid, XZ for Java, and ZXing.

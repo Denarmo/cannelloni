@@ -82,7 +82,7 @@ Cannelloni incorporates and interfaces with various third-party open-source comp
 - **Cannelloni Modifications & New Code**: Modifications and additions authored by Denarmo and contributors, MIT License.
 - **MinUI**: Original minimalist handheld design inspiration by Shaun Inman.
 - **Libretro / RetroArch**: Libretro API, core specifications, and emulation runtime (GPL / various permissive licenses).
-- **Cores**: Individual emulation cores maintain their respective licenses (GPLv2, GPLv3, MPLv2.0, Zlib, Non-commercial, MAME license). See [`credits.json`](credits.json) and in-app Credits for granular breakdowns.
+- **Cores**: Individual emulation cores maintain their respective licenses (GPLv2, GPLv2+, GPLv3, MPLv2.0, Zlib, Non-commercial, MAME license). See [`credits.json`](credits.json) and in-app Credits for granular breakdowns.
 - **Fonts**: M PLUS 1 Code (OFL), BPreplay (OFL), Nerd Fonts (OFL).
 - **Libraries**: Apache Commons Compress (Apache 2.0), PdfiumAndroid (Apache 2.0), XZ for Java (Public Domain), ZXing (Apache 2.0).
 - **Shaders**: CRT-Cannelloni, CRT-Aperture, CRT-EasyMode, CRT-Geom, CRT-Lottes, Zfast, Sharp-Bilinear (GPL / Public Domain).
@@ -97,7 +97,7 @@ For the complete list of licenses and attributions, see [`LICENSE`](LICENSE) and
 Cannelloni is an open-source downstream fork of the **Cannoli** project originally created by **Brandon T. Kowalski** and the Cannoli development team. 
 
 - **No Ownership Claim:** The maintainer of this repository (Denarmo) claims **no ownership** or original authorship over the underlying Cannoli codebase or its assets. The original codebase remains the sole property and copyright of Brandon T. Kowalski and the Cannoli Contributors under the GNU General Public License version 3.0 (GPLv3).
-- **Modification Attribution:** All subsequent modifications, rebranding, architectural enhancements, melonDS Nintendo DS integration, touchscreen input handling, screen-swap shortcuts, and new code authored specifically for Cannelloni are Copyright (C) 2026 Denarmo and Cannelloni Contributors.
+- **Modification Attribution:** All subsequent modifications, rebranding, architectural enhancements, melonDS Nintendo DS integration, PPSSPP PSP integration, touchscreen input handling, screen-swap shortcuts, and new code authored specifically for Cannelloni are Copyright (C) 2026 Denarmo and Cannelloni Contributors.
 
 ### 7.2 Denarmo's Code is MIT Licensed
 All modifications, additions, bug fixes, and new features authored by Denarmo for Cannelloni are released under the permissive terms of the **MIT License**.

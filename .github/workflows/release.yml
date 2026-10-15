@@ -22,10 +22,12 @@ on:
 
 env:
   BUILDBOT: https://buildbot.libretro.com/nightly/android/latest
+  # System assets the PPSSPP core needs in <system>/PPSSPP (fonts, atlas, lang, shaders).
+  PPSSPP_ASSETS: https://buildbot.libretro.com/assets/system/PPSSPP.zip
   CORES: >-
     fbneo gambatte genesis_plus_gx handy mame2003_plus mednafen_ngp
     mednafen_pce_fast mednafen_vb mednafen_wswan melonds mgba nestopia
-    pcsx_rearmed pokemini prosystem snes9x stella swanstation
+    pcsx_rearmed pokemini ppsspp prosystem snes9x stella swanstation
 
 jobs:
   build:
@@ -55,6 +57,21 @@ jobs:
               fi
             done
           done
+
+      - name: Download PPSSPP system assets
+        run: |
+          case " $CORES " in
+            *" ppsspp "*) ;;
+            *) echo "ppsspp not bundled, skipping assets"; exit 0 ;;
+          esac
+          dest="app/src/main/assets/ppsspp"
+          mkdir -p "$dest"
+          if curl -sfL "$PPSSPP_ASSETS" -o /tmp/PPSSPP.zip && unzip -tq /tmp/PPSSPP.zip; then
+            mv /tmp/PPSSPP.zip "$dest/PPSSPP.zip"
+          else
+            rm -f /tmp/PPSSPP.zip
+            echo "Warning: failed to download PPSSPP system assets"
+          fi
 
       - uses: actions/setup-java@v5
         with:

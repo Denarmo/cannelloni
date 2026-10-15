@@ -90,6 +90,20 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
 
     @Volatile var onFrameRendered: (() -> Unit)? = null
 
+    // Invoked on the GL thread right after the first successful HW context
+    // reset, before the first retro_run of a HW-rendered core.
+    @Volatile var onHwContextReady: (() -> Unit)? = null
+
+    // HW-rendered cores: context_reset has to run on this thread with the
+    // GLSurfaceView's context current, lazily before the first retro_run and
+    // again whenever the EGL context is recreated.
+    private var hwResetNeeded = true
+    private var hwReadyFired = false
+    @Volatile private var hwReleased = false
+    private var hwTexCoordBuffer: FloatBuffer? = null
+    private var hwTexKey = ""
+    private var hwGeometrySerial = -1
+
     @Volatile var logger: ((String) -> Unit)? = null
     private var loggedFrameW = -1
     private var loggedFrameH = -1
@@ -120,6 +134,15 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
     )
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) = guard("onSurfaceCreated") {
+        runner.glThread = Thread.currentThread()
+        if (runner.isHwRender() && runner.isHwContextAlive()) {
+            // New EGL context: the core's GL objects died with the old one. Tell it
+            // now, before we create any objects whose names it could delete.
+            logger?.invoke("HW: EGL context recreated, destroying stale core context")
+            runner.hwContextDestroy()
+        }
+        hwResetNeeded = true
+        hwTexKey = ""
         GLES20.glClearColor(0f, 0f, 0f, 1f)
         fpsMeter.reset()
         loggedFirstFrame = false
@@ -203,6 +226,21 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
             loggedFirstFrame = true
             logger?.invoke("GL first frame: surface=${surfaceWidth}x${surfaceHeight}")
         }
+        runner.glThread = Thread.currentThread()
+        val hw = runner.isHwRender()
+        if (hw && !ensureHwContext()) {
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+            onFrameRendered?.invoke()
+            return
+        }
+        if (hw) {
+            val serial = runner.getGeometrySerial()
+            if (serial != hwGeometrySerial) {
+                hwGeometrySerial = serial
+                val ar = runner.getAspectRatio()
+                if (ar > 0f) coreAspectRatio = ar
+            }
+        }
         if (!paused) {
             val now = System.nanoTime()
             val delta = if (lastDrawNanos == 0L) 0L else now - lastDrawNanos
@@ -248,7 +286,24 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
             return
         }
 
-        if (runner.hasNewFrame()) {
+        var gameTexture = textureId
+        var gameTexCoords = texCoordBuffer
+        val hwTarget = if (hw) runner.getHwTarget() else null
+        if (hw) {
+            if (hwTarget == null) {
+                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+                onFrameRendered?.invoke()
+                return
+            }
+            gameTexture = hwTarget.texture
+            gameTexCoords = hwTexCoords(hwTarget, w, h, runner.getRotation())
+            // The FBO texture is ours, but set the filter every frame: cheap,
+            // and it keeps sharpness changes and context resets in sync.
+            val filter = if (sharpness == Sharpness.SOFT) GLES20.GL_LINEAR else GLES20.GL_NEAREST
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, gameTexture)
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, filter)
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, filter)
+        } else if (runner.hasNewFrame()) {
             val pixelFormat = runner.getPixelFormat()
             val bpp = if (pixelFormat == LibretroRunner.PIXEL_FORMAT_XRGB8888) 4 else 2
             val needed = w * h * bpp
@@ -358,14 +413,14 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
         viewportHeight = vpH
 
         if (screenEffect != ScreenEffect.NONE && pipeline != null && pipelineWarmedUp) {
-            pipeline!!.render(textureId, w, h, vpX, vpY, vpW, vpH,
-                texCoordBuffer, fboTexCoordBuffer, vertexBuffer, paused = paused)
+            pipeline!!.render(gameTexture, w, h, vpX, vpY, vpW, vpH,
+                gameTexCoords, fboTexCoordBuffer, vertexBuffer, paused = paused)
         } else {
             if (pipeline != null && screenEffect != ScreenEffect.NONE) {
                 pipeline!!.prewarmFbos(w, h, vpW, vpH)
                 pipelineWarmedUp = true
             }
-            drawSimple(w, h, vpX, vpY, vpW, vpH)
+            drawSimple(gameTexture, gameTexCoords, vpX, vpY, vpW, vpH)
         }
         if (overlayLoaded) drawOverlay()
 
@@ -383,19 +438,75 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
     }
 
     private fun runEmulatedFrame() {
+        // For HW cores the bridge restores the GL state we rely on after retro_run.
         runner.run()
         fpsMeter.tick(System.nanoTime())
     }
 
-    private fun drawSimple(w: Int, h: Int, vpX: Int, vpY: Int, vpW: Int, vpH: Int) {
+    // Lazily create the HW core's FBO and call context_reset (GL thread).
+    private fun ensureHwContext(): Boolean {
+        if (hwReleased) return false
+        if (!hwResetNeeded && runner.isHwContextAlive()) return true
+        if (!runner.hwContextReset()) {
+            if (hwResetNeeded) logger?.invoke("HW: context reset failed")
+            hwResetNeeded = false
+            return false
+        }
+        hwResetNeeded = false
+        hwTexKey = ""
+        logger?.invoke("HW: context reset done")
+        if (!hwReadyFired) {
+            hwReadyFired = true
+            onHwContextReady?.invoke()
+        }
+        return true
+    }
+
+    /**
+     * GL thread (queueEvent): call the HW core's context_destroy and free its
+     * FBO ahead of unloadGame. Optional -- runner.unloadGame() does the same --
+     * but stops this renderer from resetting the context again afterwards.
+     */
+    fun releaseHwContext() {
+        hwReleased = true
+        runner.hwContextDestroy()
+    }
+
+    // Texture coordinates for the w x h sub-rectangle of the HW FBO, in the
+    // same orientation convention as the software rotatedTexCoords (v = 0 is
+    // the top image row), flipped when the core renders bottom-left origin.
+    private fun hwTexCoords(target: LibretroRunner.HwTarget, w: Int, h: Int, rotation: Int): FloatBuffer {
+        val key = "${target.width}x${target.height}:${w}x$h:${target.bottomLeftOrigin}:$rotation"
+        val existing = hwTexCoordBuffer
+        if (existing != null && key == hwTexKey) return existing
+        val su = (w.toFloat() / target.width.coerceAtLeast(1)).coerceAtMost(1f)
+        val sv = (h.toFloat() / target.height.coerceAtLeast(1)).coerceAtMost(1f)
+        val base = rotatedTexCoords[rotation and 3]
+        val coords = FloatArray(base.size)
+        for (i in base.indices step 2) {
+            val v = if (target.bottomLeftOrigin) 1f - base[i + 1] else base[i + 1]
+            coords[i] = base[i] * su
+            coords[i + 1] = v * sv
+        }
+        val buf = existing ?: ByteBuffer.allocateDirect(coords.size * 4)
+            .order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.clear()
+        buf.put(coords)
+        buf.position(0)
+        hwTexCoordBuffer = buf
+        hwTexKey = key
+        return buf
+    }
+
+    private fun drawSimple(texture: Int, texCoords: FloatBuffer, vpX: Int, vpY: Int, vpW: Int, vpH: Int) {
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
         GLES20.glViewport(vpX, vpY, vpW, vpH)
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
         GLES20.glUseProgram(programNone)
-        bindQuadAttribs(programNone)
+        bindQuadAttribs(programNone, texCoords)
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture)
         GLES20.glUniform1i(GLES20.glGetUniformLocation(programNone, "uTexture"), 0)
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
@@ -455,13 +566,13 @@ class LibretroRenderer(private val runner: LibretroRunner) : GLSurfaceView.Rende
         GLES20.glDisable(GLES20.GL_BLEND)
     }
 
-    private fun bindQuadAttribs(program: Int) {
+    private fun bindQuadAttribs(program: Int, texCoords: FloatBuffer = texCoordBuffer) {
         val posHandle = GLES20.glGetAttribLocation(program, "aPosition")
         GLES20.glEnableVertexAttribArray(posHandle)
         GLES20.glVertexAttribPointer(posHandle, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer)
         val texHandle = GLES20.glGetAttribLocation(program, "aTexCoord")
         GLES20.glEnableVertexAttribArray(texHandle)
-        GLES20.glVertexAttribPointer(texHandle, 2, GLES20.GL_FLOAT, false, 0, texCoordBuffer)
+        GLES20.glVertexAttribPointer(texHandle, 2, GLES20.GL_FLOAT, false, 0, texCoords)
     }
 
     private fun unbindQuadAttribs(program: Int) {

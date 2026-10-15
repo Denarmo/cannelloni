@@ -4,6 +4,7 @@
     { "name": "Shaun Inman", "detail": "MinUI" },
     { "name": "Libretro / RetroArch", "detail": "Libretro API & emulator core ecosystem" },
     { "name": "melonDS Team & Arisotura", "detail": "melonDS Nintendo DS emulation" },
+    { "name": "PPSSPP Team & Henrik Rydgård", "detail": "PPSSPP PSP emulation" },
     { "name": "Baba", "detail": "A great friend that keeps believing in me" },
     { "name": "Abraham McCampbell", "detail": "Original logo design inspiration" }
   ],
@@ -33,6 +34,7 @@
     { "name": "Nestopia", "id": "nestopia", "what": "NES / FDS", "license": "GPLv2" },
     { "name": "PCSX ReARMed", "id": "pcsx_rearmed", "what": "PlayStation", "license": "GPLv2" },
     { "name": "PokeMini", "id": "pokemini", "what": "Pokémon Mini", "license": "GPLv3" },
+    { "name": "PPSSPP", "id": "ppsspp", "what": "PSP", "license": "GPLv2+" },
     { "name": "ProSystem", "id": "prosystem", "what": "Atari 7800", "license": "GPLv2" },
     { "name": "Snes9x", "id": "snes9x", "what": "SNES", "license": "Non-commercial" },
     { "name": "Stella", "id": "stella", "what": "Atari 2600", "license": "GPLv2" },

@@ -13,3 +13,4 @@
 | Hack for vertical FBN games to display top-up                  | [#32](https://github.com/CannelloniHQ/cannelloni/issues/32), [#19](https://github.com/CannelloniHQ/cannelloni/issues/19) |
 | Flip Play and Resume Option                                    | [#35](https://github.com/CannelloniHQ/cannelloni/issues/35)                                                        |
 | Unmap buttons for shortcuts                                    | [#31](https://github.com/CannelloniHQ/cannelloni/issues/31)                                                        |
+| Built-in PSP core (PPSSPP) with bundled system assets          | —                                                                                                            |
