@@ -7,7 +7,10 @@
 #include <map>
 #include <vector>
 #include <mutex>
+#include <atomic>
 #include <android/log.h>
+#include <EGL/egl.h>
+#include <GLES3/gl3.h>
 #include <zlib.h>
 #include "libretro.h"
 #include "frame_buffer.h"
@@ -170,6 +173,36 @@ static void core_log(enum retro_log_level level, const char *fmt, ...) {
 }
 
 static unsigned g_rotation = 0;
+
+// --- A/V info reported through SET_GEOMETRY / SET_SYSTEM_AV_INFO ---
+// Seeded from retro_get_system_av_info after load_game; geometry serial bumps
+// on every change so the renderer can pick up new aspect ratios cheaply.
+static struct retro_game_geometry g_geometry = {};
+static struct retro_system_timing g_timing = {};
+static bool g_geometry_valid = false;
+static std::atomic<int> g_geometry_serial{0};
+
+// --- Hardware rendering (RETRO_ENVIRONMENT_SET_HW_RENDER, GLES only) ---
+// The core renders into a frontend-owned FBO. The FBO and context_reset must
+// happen on the GL thread, so SET_HW_RENDER only records the request and
+// nativeHwContextReset (called lazily by the renderer) does the GL work.
+static struct retro_hw_render_callback g_hw_render = {};
+static bool g_hw_requested = false;
+static bool g_hw_context_alive = false;   // context_reset called, context_destroy not yet
+static EGLContext g_hw_egl_ctx = EGL_NO_CONTEXT;
+static std::atomic<unsigned> g_hw_fbo{0}; // read by get_current_framebuffer (any core thread)
+static GLuint g_hw_tex = 0;
+static GLuint g_hw_rb = 0;
+static unsigned g_hw_fbo_w = 0;
+static unsigned g_hw_fbo_h = 0;
+static bool g_hw_es3 = false;
+static GLint g_hw_max_attribs = 8;
+static GLint g_hw_max_tex_units = 8;
+static bool g_hw_resize_pending = false;
+static bool g_in_core_run = false;
+static void *g_gles_handle = nullptr;
+
+static void hw_on_geometry_changed();
 
 static bool environment_cb(unsigned cmd, void *data) {
     cmd &= ~0x10000U; /* strip RETRO_ENVIRONMENT_EXPERIMENTAL flag */
@@ -448,6 +481,73 @@ static bool environment_cb(unsigned cmd, void *data) {
             return true;
         }
 
+        case RETRO_ENVIRONMENT_SET_HW_RENDER: {
+            auto *cb = (struct retro_hw_render_callback *)data;
+            if (!cb) return false;
+            switch (cb->context_type) {
+                case RETRO_HW_CONTEXT_OPENGLES2:
+                case RETRO_HW_CONTEXT_OPENGLES3:
+                case RETRO_HW_CONTEXT_OPENGLES_VERSION:
+                    break;
+                default:
+                    // Desktop GL / Vulkan / D3D: decline so the core falls back.
+                    LOGW("SET_HW_RENDER: rejecting context type %d", (int)cb->context_type);
+                    return false;
+            }
+            cb->get_current_framebuffer = [](void) -> uintptr_t { return (uintptr_t)g_hw_fbo.load(); };
+            cb->get_proc_address = [](const char *sym) -> retro_proc_address_t {
+                void *fn = (void *)eglGetProcAddress(sym);
+                if (!fn) {
+                    if (!g_gles_handle) g_gles_handle = dlopen("libGLESv3.so", RTLD_NOW);
+                    if (g_gles_handle) fn = dlsym(g_gles_handle, sym);
+                }
+                return (retro_proc_address_t)fn;
+            };
+            g_hw_render = *cb;
+            g_hw_requested = true;
+            LOGI("SET_HW_RENDER: type=%d v%u.%u depth=%d stencil=%d bottom_left=%d",
+                 (int)cb->context_type, cb->version_major, cb->version_minor,
+                 cb->depth, cb->stencil, cb->bottom_left_origin);
+            return true;
+        }
+
+        case RETRO_ENVIRONMENT_GET_PREFERRED_HW_RENDER:
+            // GLES3: PPSSPP's GLES build only takes its GL path for OPENGL/
+            // OPENGLES3/DUMMY, so answering OPENGLES2 would push it to Vulkan.
+            *(unsigned *)data = RETRO_HW_CONTEXT_OPENGLES3;
+            return true;
+
+        case RETRO_ENVIRONMENT_SET_HW_SHARED_CONTEXT:
+            return true;
+
+        case RETRO_ENVIRONMENT_SET_GEOMETRY: {
+            auto *geom = (const struct retro_game_geometry *)data;
+            if (!geom) return false;
+            // Only base size and aspect may change here; max stays as-is.
+            g_geometry.base_width = geom->base_width;
+            g_geometry.base_height = geom->base_height;
+            g_geometry.aspect_ratio = geom->aspect_ratio;
+            g_geometry_valid = true;
+            g_geometry_serial++;
+            LOGI("SET_GEOMETRY: %ux%u aspect %.3f", geom->base_width, geom->base_height, geom->aspect_ratio);
+            return true;
+        }
+
+        case RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO: {
+            auto *av = (const struct retro_system_av_info *)data;
+            if (!av) return false;
+            g_geometry = av->geometry;
+            g_timing = av->timing;
+            g_geometry_valid = true;
+            g_geometry_serial++;
+            LOGI("SET_SYSTEM_AV_INFO: %ux%u (max %ux%u) aspect %.3f @ %.2f fps, %.0f Hz",
+                 av->geometry.base_width, av->geometry.base_height,
+                 av->geometry.max_width, av->geometry.max_height,
+                 av->geometry.aspect_ratio, av->timing.fps, av->timing.sample_rate);
+            hw_on_geometry_changed();
+            return true;
+        }
+
         default:
             LOGI("Unhandled env cmd: %u", cmd);
             return false;
@@ -455,6 +555,14 @@ static bool environment_cb(unsigned cmd, void *data) {
 }
 
 static void video_refresh_cb(const void *data, unsigned width, unsigned height, size_t pitch) {
+    if (data == RETRO_HW_FRAME_BUFFER_VALID) {
+        // HW core rendered into g_hw_fbo; the renderer samples it directly.
+        std::lock_guard<std::mutex> lock(g_frame_mutex);
+        g_frame_width = width;
+        g_frame_height = height;
+        g_frame_ready = true;
+        return;
+    }
     if (!data) return;
 
     size_t bpp = (g_pixel_format == RETRO_PIXEL_FORMAT_XRGB8888) ? 4 : 2;
@@ -512,6 +620,253 @@ static void video_refresh_cb(const void *data, unsigned width, unsigned height, 
     }
     g_frame_pitch = row_bytes;
     g_frame_ready = true;
+}
+
+// --- HW render helpers (GL thread only) ---
+
+// True when the GL context current on this thread is the one the core's
+// context_reset ran against, i.e. g_hw_fbo and friends are valid names here.
+static bool hw_context_current() {
+    return g_hw_context_alive && g_hw_egl_ctx != EGL_NO_CONTEXT &&
+           eglGetCurrentContext() == g_hw_egl_ctx;
+}
+
+// The core changes GL state freely; put back everything LibretroRenderer and
+// ShaderPipeline assume (default FBO, no tests/blend, client-side attribs on
+// VAO 0, no bound buffers/samplers, default pixel store, black clear color).
+static void hw_restore_gl_state() {
+    if (eglGetCurrentContext() == EGL_NO_CONTEXT) return;
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    glDisable(GL_SAMPLE_COVERAGE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_TRUE);
+    glStencilMask(0xFFFFFFFF);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glUseProgram(0);
+    if (g_hw_es3) {
+        glDisable(GL_RASTERIZER_DISCARD);
+        glDisable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+        glBindVertexArray(0);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_IMAGES, 0);
+        glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+        glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    for (GLint i = 0; i < g_hw_max_attribs; i++) {
+        glDisableVertexAttribArray((GLuint)i);
+        if (g_hw_es3) glVertexAttribDivisor((GLuint)i, 0);
+    }
+    for (GLint u = 0; u < g_hw_max_tex_units; u++) {
+        glActiveTexture(GL_TEXTURE0 + u);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        if (g_hw_es3) glBindSampler((GLuint)u, 0);
+    }
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+}
+
+static bool gl_has_extension(const char *name) {
+    const char *ext = (const char *)glGetString(GL_EXTENSIONS);
+    if (!ext) return false;
+    size_t len = strlen(name);
+    for (const char *p = strstr(ext, name); p; p = strstr(p + len, name)) {
+        if ((p == ext || p[-1] == ' ') && (p[len] == ' ' || p[len] == '\0')) return true;
+    }
+    return false;
+}
+
+// (Re)allocate the color texture and depth/stencil storage of g_hw_fbo. The
+// FBO name itself is kept so a core that cached get_current_framebuffer()
+// keeps rendering into the right object after a resize. Must be called
+// outside retro_run (it clobbers bindings) with the HW context current.
+static bool hw_alloc_fbo(unsigned w, unsigned h) {
+    if (w == 0) w = 1;
+    if (h == 0) h = 1;
+    GLuint fbo = g_hw_fbo.load();
+    if (!fbo) glGenFramebuffers(1, &fbo);
+    if (!g_hw_tex) glGenTextures(1, &g_hw_tex);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, g_hw_tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    if (g_hw_es3) glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)w, (GLsizei)h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_hw_tex, 0);
+
+    if (g_hw_render.depth || g_hw_render.stencil) {
+        if (!g_hw_rb) glGenRenderbuffers(1, &g_hw_rb);
+        glBindRenderbuffer(GL_RENDERBUFFER, g_hw_rb);
+        // Packed depth24/stencil8 is core in ES3 and GL_OES_packed_depth_stencil
+        // in ES2 (same enum value).
+        bool packed = g_hw_es3 || gl_has_extension("GL_OES_packed_depth_stencil");
+        if (packed) {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, (GLsizei)w, (GLsizei)h);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, g_hw_rb);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, g_hw_rb);
+        } else if (g_hw_render.depth) {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, (GLsizei)w, (GLsizei)h);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, g_hw_rb);
+        } else {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, (GLsizei)w, (GLsizei)h);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, g_hw_rb);
+        }
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    }
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        LOGE("HW FBO incomplete: 0x%x (%ux%u)", status, w, h);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        g_hw_fbo = fbo;
+        return false;
+    }
+
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glDisable(GL_SCISSOR_TEST);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_TRUE);
+    glStencilMask(0xFFFFFFFF);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    g_hw_fbo = fbo;
+    g_hw_fbo_w = w;
+    g_hw_fbo_h = h;
+    LOGI("HW FBO %u allocated: %ux%u", fbo, w, h);
+    return true;
+}
+
+// Size the FBO must have to hold any frame the core may produce.
+static void hw_target_size(unsigned *w, unsigned *h) {
+    unsigned tw = g_geometry_valid ? g_geometry.max_width : 0;
+    unsigned th = g_geometry_valid ? g_geometry.max_height : 0;
+    if (g_geometry_valid && g_geometry.base_width > tw) tw = g_geometry.base_width;
+    if (g_geometry_valid && g_geometry.base_height > th) th = g_geometry.base_height;
+    if (tw == 0) tw = 640;
+    if (th == 0) th = 480;
+    *w = tw;
+    *h = th;
+}
+
+// Called from SET_SYSTEM_AV_INFO. Grow the FBO if max geometry outgrew it;
+// inside retro_run the core's bindings must not be disturbed, so defer to
+// the start of the next nativeRun.
+static void hw_on_geometry_changed() {
+    if (!g_hw_context_alive) return;  // context reset will size from g_geometry
+    unsigned w, h;
+    hw_target_size(&w, &h);
+    if (w <= g_hw_fbo_w && h <= g_hw_fbo_h) return;
+    if (!g_in_core_run && hw_context_current()) {
+        hw_alloc_fbo(w > g_hw_fbo_w ? w : g_hw_fbo_w, h > g_hw_fbo_h ? h : g_hw_fbo_h);
+        hw_restore_gl_state();
+    } else {
+        g_hw_resize_pending = true;
+    }
+}
+
+// Call the core's context_destroy (once) and drop our GL objects. Objects
+// are only deleted when their context is current; if the EGL context was
+// lost they are already gone and the names may now belong to someone else.
+static void hw_context_destroy() {
+    if (!g_hw_context_alive) return;
+    bool same_ctx = hw_context_current();
+    g_hw_context_alive = false;
+    if (g_hw_render.context_destroy) g_hw_render.context_destroy();
+    if (same_ctx) {
+        GLuint fbo = g_hw_fbo.load();
+        if (fbo) glDeleteFramebuffers(1, &fbo);
+        if (g_hw_tex) glDeleteTextures(1, &g_hw_tex);
+        if (g_hw_rb) glDeleteRenderbuffers(1, &g_hw_rb);
+    }
+    if (eglGetCurrentContext() != EGL_NO_CONTEXT) hw_restore_gl_state();
+    g_hw_fbo = 0;
+    g_hw_tex = 0;
+    g_hw_rb = 0;
+    g_hw_fbo_w = 0;
+    g_hw_fbo_h = 0;
+    g_hw_resize_pending = false;
+    g_hw_egl_ctx = EGL_NO_CONTEXT;
+    LOGI("HW context destroyed");
+}
+
+// Forget all HW state without calling into the core (core unloaded/closed).
+static void hw_reset_state() {
+    g_hw_render = {};
+    g_hw_requested = false;
+    g_hw_context_alive = false;
+    g_hw_egl_ctx = EGL_NO_CONTEXT;
+    g_hw_fbo = 0;
+    g_hw_tex = 0;
+    g_hw_rb = 0;
+    g_hw_fbo_w = 0;
+    g_hw_fbo_h = 0;
+    g_hw_resize_pending = false;
+    g_in_core_run = false;
+}
+
+// Read the last HW frame (w x h, top-left of the FBO) into dst as RGBA bytes
+// with the top row first and alpha forced opaque -- the same layout
+// video_refresh_cb produces for XRGB8888 software frames.
+static bool hw_read_frame(uint8_t *dst, size_t capacity, unsigned w, unsigned h) {
+    if (!dst || w == 0 || h == 0) return false;
+    if (!hw_context_current() || !g_hw_fbo.load()) return false;
+    if (w > g_hw_fbo_w) w = g_hw_fbo_w;
+    if (h > g_hw_fbo_h) h = g_hw_fbo_h;
+    size_t row = (size_t)w * 4;
+    if (capacity < row * h) return false;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, g_hw_fbo.load());
+    if (g_hw_es3) {
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+        glReadBuffer(GL_COLOR_ATTACHMENT0);
+        glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+        glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+    }
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadPixels(0, 0, (GLsizei)w, (GLsizei)h, GL_RGBA, GL_UNSIGNED_BYTE, dst);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    if (g_hw_render.bottom_left_origin) {
+        std::vector<uint8_t> tmp(row);
+        for (unsigned y = 0; y < h / 2; y++) {
+            uint8_t *a = dst + (size_t)y * row;
+            uint8_t *b = dst + (size_t)(h - 1 - y) * row;
+            memcpy(tmp.data(), a, row);
+            memcpy(a, b, row);
+            memcpy(b, tmp.data(), row);
+        }
+    }
+    for (size_t i = 3; i < row * h; i += 4) dst[i] = 0xFF;
+    return true;
 }
 
 static void audio_sample_cb(int16_t left, int16_t right) {
@@ -579,6 +934,11 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeLoadCore(JNIEnv *env, j
 
     g_pixel_format = RETRO_PIXEL_FORMAT_0RGB1555;
     g_rotation = 0;
+
+    hw_reset_state();
+    g_geometry = {};
+    g_timing = {};
+    g_geometry_valid = false;
 
     memset(g_input_state, 0, sizeof(g_input_state));
     memset(g_analog_state, 0, sizeof(g_analog_state));
@@ -744,6 +1104,10 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeLoadGame(JNIEnv *env, j
 
     struct retro_system_av_info av_info;
     core.get_system_av_info(&av_info);
+    g_geometry = av_info.geometry;
+    g_timing = av_info.timing;
+    g_geometry_valid = true;
+    g_geometry_serial++;
 
     LOGI("Game loaded: %ux%u @ %.2f fps, audio %.0f Hz",
          av_info.geometry.base_width, av_info.geometry.base_height,
@@ -768,9 +1132,136 @@ extern "C" void ra_process_frame(void);
 
 JNIEXPORT void JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeRun(JNIEnv *, jobject) {
+    if (g_hw_requested) {
+        // A HW core must not run before context_reset (nativeHwContextReset).
+        if (!hw_context_current()) return;
+        if (g_hw_resize_pending) {
+            g_hw_resize_pending = false;
+            unsigned w, h;
+            hw_target_size(&w, &h);
+            hw_alloc_fbo(w > g_hw_fbo_w ? w : g_hw_fbo_w, h > g_hw_fbo_h ? h : g_hw_fbo_h);
+        }
+        g_in_core_run = true;
+        core.run();
+        g_in_core_run = false;
+        hw_restore_gl_state();
+        cheat_engine_apply();
+        ra_process_frame();
+        return;
+    }
     core.run();
     cheat_engine_apply();
     ra_process_frame();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeIsHwRender(JNIEnv *, jobject) {
+    return g_hw_requested ? JNI_TRUE : JNI_FALSE;
+}
+
+// GL thread. Allocates the FBO for the current EGL context and calls the
+// core's context_reset. No-op (true) if already done for this context.
+JNIEXPORT jboolean JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeHwContextReset(JNIEnv *, jobject) {
+    if (!g_hw_requested || !core.handle) return JNI_FALSE;
+    EGLContext cur = eglGetCurrentContext();
+    if (cur == EGL_NO_CONTEXT) {
+        LOGE("nativeHwContextReset: no current EGL context");
+        return JNI_FALSE;
+    }
+    if (g_hw_context_alive) {
+        if (cur == g_hw_egl_ctx) return JNI_TRUE;
+        // EGL context was replaced underneath us: tell the core first.
+        hw_context_destroy();
+    }
+
+    int major = 2;
+    const char *ver = (const char *)glGetString(GL_VERSION);
+    if (ver) {
+        const char *p = strstr(ver, "OpenGL ES");
+        if (p) {
+            p += 9;
+            while (*p && (*p < '0' || *p > '9')) p++;
+            if (*p) major = atoi(p);
+        }
+    }
+    g_hw_es3 = major >= 3;
+    bool wants_es3 = g_hw_render.context_type == RETRO_HW_CONTEXT_OPENGLES3 ||
+                     (g_hw_render.context_type == RETRO_HW_CONTEXT_OPENGLES_VERSION &&
+                      g_hw_render.version_major >= 3);
+    if (wants_es3 && !g_hw_es3)
+        LOGW("Core asked for GLES %u.%u but context is %s", g_hw_render.version_major,
+             g_hw_render.version_minor, ver ? ver : "?");
+
+    g_hw_max_attribs = 8;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &g_hw_max_attribs);
+    if (g_hw_max_attribs <= 0 || g_hw_max_attribs > 32) g_hw_max_attribs = 16;
+    g_hw_max_tex_units = 8;
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &g_hw_max_tex_units);
+    if (g_hw_max_tex_units <= 0 || g_hw_max_tex_units > 32) g_hw_max_tex_units = 16;
+
+    unsigned w, h;
+    hw_target_size(&w, &h);
+    if (!hw_alloc_fbo(w, h)) {
+        hw_restore_gl_state();
+        return JNI_FALSE;
+    }
+    g_hw_egl_ctx = cur;
+    g_hw_context_alive = true;
+    g_hw_resize_pending = false;
+    LOGI("HW context reset (%s)", ver ? ver : "?");
+    if (g_hw_render.context_reset) g_hw_render.context_reset();
+    hw_restore_gl_state();
+    return JNI_TRUE;
+}
+
+// GL thread. Calls context_destroy and frees the FBO; no-op if not alive.
+JNIEXPORT void JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeHwContextDestroy(JNIEnv *, jobject) {
+    hw_context_destroy();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeHwContextAlive(JNIEnv *, jobject) {
+    return g_hw_context_alive ? JNI_TRUE : JNI_FALSE;
+}
+
+// [colorTexture, fboWidth, fboHeight, bottomLeftOrigin]; zeros if no context.
+JNIEXPORT jintArray JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeHwGetTarget(JNIEnv *env, jobject) {
+    jint vals[4] = {0, 0, 0, 0};
+    if (g_hw_context_alive) {
+        vals[0] = (jint)g_hw_tex;
+        vals[1] = (jint)g_hw_fbo_w;
+        vals[2] = (jint)g_hw_fbo_h;
+        vals[3] = g_hw_render.bottom_left_origin ? 1 : 0;
+    }
+    jintArray result = env->NewIntArray(4);
+    env->SetIntArrayRegion(result, 0, 4, vals);
+    return result;
+}
+
+JNIEXPORT jint JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetGeometrySerial(JNIEnv *, jobject) {
+    return (jint)g_geometry_serial.load();
+}
+
+// Latest A/V info including SET_GEOMETRY / SET_SYSTEM_AV_INFO updates:
+// [baseWidth, baseHeight, fps*1_000_000, sampleRate, maxWidth, maxHeight], or null before load.
+JNIEXPORT jintArray JNICALL
+Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetCurrentAvInfo(JNIEnv *env, jobject) {
+    if (!g_geometry_valid) return nullptr;
+    jint vals[6] = {
+        (jint)g_geometry.base_width,
+        (jint)g_geometry.base_height,
+        (jint)(g_timing.fps * 1000000),
+        (jint)g_timing.sample_rate,
+        (jint)g_geometry.max_width,
+        (jint)g_geometry.max_height
+    };
+    jintArray result = env->NewIntArray(6);
+    env->SetIntArrayRegion(result, 0, 6, vals);
+    return result;
 }
 
 JNIEXPORT void JNICALL
@@ -825,6 +1316,8 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetRotation(JNIEnv *, j
 
 JNIEXPORT jint JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetPixelFormat(JNIEnv *, jobject) {
+    // HW frames are read back as RGBA bytes, i.e. the converted XRGB8888 layout
+    if (g_hw_requested) return (jint)RETRO_PIXEL_FORMAT_XRGB8888;
     // 0RGB1555 is converted to RGB565 in video_refresh_cb
     unsigned effective = (g_pixel_format == RETRO_PIXEL_FORMAT_0RGB1555)
         ? RETRO_PIXEL_FORMAT_RGB565 : g_pixel_format;
@@ -852,6 +1345,14 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeHasNewFrame(JNIEnv *, j
 JNIEXPORT void JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeCopyFrame(JNIEnv *env, jobject, jobject buffer) {
     std::lock_guard<std::mutex> lock(g_frame_mutex);
+    if (g_hw_requested) {
+        // GL thread only: reads the FBO back (skipped without a current context)
+        if (!g_frame_ready) return;
+        hw_read_frame((uint8_t *)env->GetDirectBufferAddress(buffer),
+                      (size_t)env->GetDirectBufferCapacity(buffer), g_frame_width, g_frame_height);
+        g_frame_ready = false;
+        return;
+    }
     if (!g_frame_buf || !g_frame_ready) return;
     void *dst = env->GetDirectBufferAddress(buffer);
     if (!dst) return;
@@ -861,15 +1362,24 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeCopyFrame(JNIEnv *env, 
     g_frame_ready = false;
 }
 
-JNIEXPORT void JNICALL
+// Returns false if nothing was copied (no frame yet, or for HW cores no
+// current GL context -- the buffer is then left untouched).
+JNIEXPORT jboolean JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeCopyLastFrame(JNIEnv *env, jobject, jobject buffer) {
     std::lock_guard<std::mutex> lock(g_frame_mutex);
-    if (!g_frame_buf) return;
+    if (g_hw_requested) {
+        // GL thread only: reads the FBO back (skipped without a current context)
+        bool ok = hw_read_frame((uint8_t *)env->GetDirectBufferAddress(buffer),
+                                (size_t)env->GetDirectBufferCapacity(buffer), g_frame_width, g_frame_height);
+        return ok ? JNI_TRUE : JNI_FALSE;
+    }
+    if (!g_frame_buf) return JNI_FALSE;
     void *dst = env->GetDirectBufferAddress(buffer);
-    if (!dst) return;
+    if (!dst) return JNI_FALSE;
     size_t bpp = (g_pixel_format == RETRO_PIXEL_FORMAT_XRGB8888) ? 4 : 2;
     size_t size = g_frame_width * g_frame_height * bpp;
     memcpy(dst, g_frame_buf, size);
+    return JNI_TRUE;
 }
 
 JNIEXPORT jboolean JNICALL
@@ -878,7 +1388,9 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeSaveState(JNIEnv *env, 
     if (size == 0) return JNI_FALSE;
 
     void *buf = malloc(size);
-    if (!core.serialize(buf, size)) {
+    bool serialized = core.serialize(buf, size);
+    if (hw_context_current()) hw_restore_gl_state();
+    if (!serialized) {
         free(buf);
         return JNI_FALSE;
     }
@@ -991,6 +1503,7 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeLoadState(JNIEnv *env, 
 
     free(alloc_buf);
     free(file_buf);
+    if (hw_context_current()) hw_restore_gl_state();
     return ok ? JNI_TRUE : JNI_FALSE;
 }
 
@@ -1065,7 +1578,10 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeCheatMemorySize(JNIEnv 
 
 JNIEXPORT void JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeUnloadGame(JNIEnv *, jobject) {
+    // Frontend order for HW cores: context_destroy, then retro_unload_game.
+    hw_context_destroy();
     core.unload_game();
+    if (eglGetCurrentContext() != EGL_NO_CONTEXT && g_hw_requested) hw_restore_gl_state();
     g_pointer_x = 0;
     g_pointer_y = 0;
     g_pointer_pressed = 0;
@@ -1073,7 +1589,10 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeUnloadGame(JNIEnv *, jo
 
 JNIEXPORT void JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeDeinit(JNIEnv *env, jobject) {
+    hw_context_destroy();  // no-op if unloadGame already destroyed it
     core.deinit();
+    hw_reset_state();
+    g_geometry_valid = false;
     if (core.handle) {
         dlclose(core.handle);
         core.handle = nullptr;
@@ -1096,6 +1615,7 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeDeinit(JNIEnv *env, job
 JNIEXPORT void JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeReset(JNIEnv *, jobject) {
     if (core.reset) core.reset();
+    if (hw_context_current()) hw_restore_gl_state();
 }
 
 JNIEXPORT jobjectArray JNICALL
@@ -1193,6 +1713,14 @@ Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetSystemInfo(JNIEnv *e
 
 JNIEXPORT jfloat JNICALL
 Java_dev_cannelloni_scorza_libretro_LibretroRunner_nativeGetAspectRatio(JNIEnv *, jobject) {
+    // HW cores: use the geometry tracked from env calls rather than calling
+    // into the core off its thread (PPSSPP's get_system_av_info has side effects).
+    if (g_hw_requested && g_geometry_valid) {
+        float hw_ar = g_geometry.aspect_ratio;
+        if (hw_ar <= 0.0f && g_geometry.base_height > 0)
+            hw_ar = (float)g_geometry.base_width / (float)g_geometry.base_height;
+        if (hw_ar > 0.0f) return hw_ar;
+    }
     struct retro_system_av_info av_info;
     core.get_system_av_info(&av_info);
     float ar = av_info.geometry.aspect_ratio;

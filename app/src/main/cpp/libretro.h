@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -92,6 +93,53 @@ extern "C" {
 // the ext disk-control interface is 58. Using 65 here makes content-info
 // overrides register a bogus disk interface with garbage callbacks.
 #define RETRO_ENVIRONMENT_SET_DISK_CONTROL_EXT_INTERFACE 58
+
+// Hardware rendering and A/V reconfiguration (values match upstream).
+// Experimental commands are listed without the 0x10000 flag, which
+// environment_cb strips before dispatching.
+#define RETRO_ENVIRONMENT_EXPERIMENTAL           0x10000
+#define RETRO_ENVIRONMENT_SET_HW_RENDER          14
+#define RETRO_ENVIRONMENT_SET_SYSTEM_AV_INFO     32
+#define RETRO_ENVIRONMENT_SET_HW_SHARED_CONTEXT  44
+#define RETRO_ENVIRONMENT_GET_PREFERRED_HW_RENDER 56
+
+// Passed as video_refresh data when a HW core rendered into the frontend FBO.
+#define RETRO_HW_FRAME_BUFFER_VALID ((void *)-1)
+
+enum retro_hw_context_type {
+    RETRO_HW_CONTEXT_NONE             = 0,
+    RETRO_HW_CONTEXT_OPENGL           = 1,
+    RETRO_HW_CONTEXT_OPENGLES2        = 2,
+    RETRO_HW_CONTEXT_OPENGL_CORE      = 3,
+    RETRO_HW_CONTEXT_OPENGLES3        = 4,
+    RETRO_HW_CONTEXT_OPENGLES_VERSION = 5,
+    RETRO_HW_CONTEXT_VULKAN           = 6,
+    RETRO_HW_CONTEXT_D3D11            = 7,
+    RETRO_HW_CONTEXT_D3D10            = 8,
+    RETRO_HW_CONTEXT_D3D12            = 9,
+    RETRO_HW_CONTEXT_D3D9             = 10,
+    RETRO_HW_CONTEXT_DUMMY            = INT_MAX
+};
+
+typedef void (*retro_proc_address_t)(void);
+typedef void (*retro_hw_context_reset_t)(void);
+typedef uintptr_t (*retro_hw_get_current_framebuffer_t)(void);
+typedef retro_proc_address_t (*retro_hw_get_proc_address_t)(const char *sym);
+
+struct retro_hw_render_callback {
+    enum retro_hw_context_type context_type;
+    retro_hw_context_reset_t context_reset;
+    retro_hw_get_current_framebuffer_t get_current_framebuffer;
+    retro_hw_get_proc_address_t get_proc_address;
+    bool depth;
+    bool stencil;
+    bool bottom_left_origin;
+    unsigned version_major;
+    unsigned version_minor;
+    bool cache_context;
+    retro_hw_context_reset_t context_destroy;
+    bool debug_context;
+};
 
 // Log levels
 enum retro_log_level {

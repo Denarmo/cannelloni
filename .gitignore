@@ -22,5 +22,8 @@ app/src/main/assets/autoconfig/
 # Built by CI from the CannelloniHQ/kitchen repo. Not tracked in git.
 app/src/main/assets/kitchen/
 
+# PPSSPP system assets zip, downloaded by CI / `task ppsspp:assets` from the libretro buildbot.
+app/src/main/assets/ppsspp/
+
 # Bytecode from the scripts/ test suite.
 __pycache__/

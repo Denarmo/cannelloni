@@ -1,6 +1,9 @@
 package dev.cannelloni.scorza.libretro
 
 import java.nio.ByteBuffer
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 data class SystemAvInfo(
     val width: Int,
@@ -8,6 +11,12 @@ data class SystemAvInfo(
     val fps: Double,
     val sampleRate: Int
 )
+
+// Posts a block to the GL thread (e.g. GLSurfaceView.queueEvent). Returns
+// false if it could not be posted (no view), in which case it never runs.
+fun interface GlDispatcher {
+    fun post(block: Runnable): Boolean
+}
 
 class LibretroRunner {
 
@@ -21,6 +30,43 @@ class LibretroRunner {
         const val DEVICE_NONE = 0
         const val DEVICE_JOYPAD = 1
         const val MAX_PORTS = 4
+
+        // PSP state saves can take hundreds of ms; leave plenty of headroom.
+        private const val GL_DISPATCH_TIMEOUT_MS = 5_000L
+    }
+
+    // HW-rendered cores (SET_HW_RENDER) must only be driven from the GL thread
+    // that owns their context. The renderer records that thread here; the
+    // activity installs glDispatcher so state ops called from other threads
+    // are marshalled there. Software cores ignore both.
+    @Volatile var glThread: Thread? = null
+    @Volatile var glDispatcher: GlDispatcher? = null
+
+    private fun needsGlDispatch(): Boolean =
+        glDispatcher != null && Thread.currentThread() !== glThread && nativeIsHwRender()
+
+    // Run block on the GL thread and wait for it. On timeout the queued block is
+    // cancelled (if it has not started) and either run here (runDirectOnTimeout,
+    // for teardown when the GL thread may be gone) or default is returned.
+    private fun <T> onGlThread(default: T, runDirectOnTimeout: Boolean = false, block: () -> T): T {
+        val dispatcher = glDispatcher
+        if (dispatcher == null || !needsGlDispatch()) return block()
+        val claimed = AtomicBoolean(false)
+        val done = CountDownLatch(1)
+        var result: T = default
+        val posted = dispatcher.post {
+            if (claimed.compareAndSet(false, true)) {
+                try { result = block() } finally { done.countDown() }
+            }
+        }
+        if (!posted) return if (runDirectOnTimeout) block() else default
+        if (done.await(GL_DISPATCH_TIMEOUT_MS, TimeUnit.MILLISECONDS)) return result
+        if (claimed.compareAndSet(false, true)) {
+            return if (runDirectOnTimeout) block() else default
+        }
+        // Already running on the GL thread; let it finish.
+        done.await()
+        return result
     }
 
     fun loadCore(corePath: String): Boolean = nativeLoadCore(corePath)
@@ -46,6 +92,42 @@ class LibretroRunner {
 
     fun run() = nativeRun()
 
+    // --- HW rendering (GLES cores such as PPSSPP) ---
+
+    /** True once the core requested an OpenGL ES context (SET_HW_RENDER) during loadGame. */
+    fun isHwRender(): Boolean = nativeIsHwRender()
+
+    /** GL thread: create the FBO and call the core's context_reset. Idempotent per EGL context. */
+    fun hwContextReset(): Boolean = nativeHwContextReset()
+
+    /** GL thread: call the core's context_destroy and free the FBO. No-op if not alive. */
+    fun hwContextDestroy() = nativeHwContextDestroy()
+
+    fun isHwContextAlive(): Boolean = nativeHwContextAlive()
+
+    data class HwTarget(val texture: Int, val width: Int, val height: Int, val bottomLeftOrigin: Boolean)
+
+    /** GL thread: the FBO colour texture the core renders into, or null before hwContextReset. */
+    fun getHwTarget(): HwTarget? {
+        val a = nativeHwGetTarget()
+        if (a[0] == 0) return null
+        return HwTarget(a[0], a[1], a[2], a[3] != 0)
+    }
+
+    /** Bumped whenever the core reports new geometry (SET_GEOMETRY / SET_SYSTEM_AV_INFO). */
+    fun getGeometrySerial(): Int = nativeGetGeometrySerial()
+
+    /** Current A/V info, including updates the core sent after loadGame. */
+    fun getCurrentAvInfo(): SystemAvInfo? {
+        val result = nativeGetCurrentAvInfo() ?: return null
+        return SystemAvInfo(
+            width = result[0],
+            height = result[1],
+            fps = result[2] / 1_000_000.0,
+            sampleRate = result[3]
+        )
+    }
+
     fun setInput(port: Int, mask: Int) = nativeSetInput(port, mask)
     fun setAnalog(port: Int, index: Int, x: Int, y: Int) = nativeSetAnalog(port, index, x, y)
     fun setPointer(x: Int, y: Int, pressed: Boolean) = nativeSetPointer(x, y, pressed)
@@ -70,11 +152,13 @@ class LibretroRunner {
     fun getFrameWidth(): Int = nativeGetFrameWidth()
     fun getFrameHeight(): Int = nativeGetFrameHeight()
     fun hasNewFrame(): Boolean = nativeHasNewFrame()
-    fun copyFrame(buffer: ByteBuffer) = nativeCopyFrame(buffer)
-    fun copyLastFrame(buffer: ByteBuffer) = nativeCopyLastFrame(buffer)
+    // HW cores read the FBO back with glReadPixels, which needs the GL thread.
+    fun copyFrame(buffer: ByteBuffer) = onGlThread(Unit) { nativeCopyFrame(buffer) }
+    /** False if nothing was copied (no frame yet, or HW core without a current GL context). */
+    fun copyLastFrame(buffer: ByteBuffer): Boolean = onGlThread(false) { nativeCopyLastFrame(buffer) }
 
-    fun saveState(path: String): Boolean = nativeSaveState(path)
-    fun loadState(path: String): Boolean = nativeLoadState(path)
+    fun saveState(path: String): Boolean = onGlThread(false) { nativeSaveState(path) }
+    fun loadState(path: String): Boolean = onGlThread(false) { nativeLoadState(path) }
     fun saveSRAM(path: String): Boolean = nativeSaveSRAM(path)
     fun loadSRAM(path: String): Boolean = nativeLoadSRAM(path)
 
@@ -82,9 +166,10 @@ class LibretroRunner {
     fun setRetroCheats(table: LongArray) = nativeSetRetroCheats(table)
     fun cheatMemorySize(): Long = nativeCheatMemorySize()
 
-    fun unloadGame() = nativeUnloadGame()
-    fun deinit() = nativeDeinit()
-    fun reset() = nativeReset()
+    // unloadGame calls context_destroy first for HW cores, so teardown order is automatic.
+    fun unloadGame() = onGlThread(Unit, runDirectOnTimeout = true) { nativeUnloadGame() }
+    fun deinit() = onGlThread(Unit, runDirectOnTimeout = true) { nativeDeinit() }
+    fun reset() = onGlThread(Unit) { nativeReset() }
 
     fun getSystemInfo(): Pair<String, String> {
         val arr = nativeGetSystemInfo()
@@ -160,6 +245,13 @@ class LibretroRunner {
     private external fun nativeAudioResume()
     private external fun nativeLoadGame(romPath: String): IntArray?
     private external fun nativeRun()
+    private external fun nativeIsHwRender(): Boolean
+    private external fun nativeHwContextReset(): Boolean
+    private external fun nativeHwContextDestroy()
+    private external fun nativeHwContextAlive(): Boolean
+    private external fun nativeHwGetTarget(): IntArray
+    private external fun nativeGetGeometrySerial(): Int
+    private external fun nativeGetCurrentAvInfo(): IntArray?
     private external fun nativeSetInput(port: Int, mask: Int)
     private external fun nativeSetAnalog(port: Int, index: Int, x: Int, y: Int)
     private external fun nativeSetPointer(x: Int, y: Int, pressed: Boolean)
@@ -171,7 +263,7 @@ class LibretroRunner {
     private external fun nativeGetFrameHeight(): Int
     private external fun nativeHasNewFrame(): Boolean
     private external fun nativeCopyFrame(buffer: ByteBuffer)
-    private external fun nativeCopyLastFrame(buffer: ByteBuffer)
+    private external fun nativeCopyLastFrame(buffer: ByteBuffer): Boolean
     private external fun nativeSaveState(path: String): Boolean
     private external fun nativeLoadState(path: String): Boolean
     private external fun nativeSaveSRAM(path: String): Boolean

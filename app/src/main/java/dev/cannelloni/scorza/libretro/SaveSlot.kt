@@ -145,7 +145,7 @@ class SaveSlotManager(private val stateBasePath: String) {
         val pixelFormat = runner.getPixelFormat()
         val bpp = if (pixelFormat == LibretroRunner.PIXEL_FORMAT_XRGB8888) 4 else 2
         val buf = ByteBuffer.allocateDirect(w * h * bpp).order(ByteOrder.nativeOrder())
-        runner.copyLastFrame(buf)
+        if (!runner.copyLastFrame(buf)) return
         buf.position(0)
 
         var bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
